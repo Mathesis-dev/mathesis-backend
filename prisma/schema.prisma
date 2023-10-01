@@ -1,6 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -8,4 +5,76 @@ generator client {
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
+}
+
+enum UserCategoryEnum {
+  TEACHER
+  STUDENT
+}
+
+model Users {
+  id         Int              @id @default(autoincrement())
+  name       String
+  email      String           @unique
+  phone      String
+  password   String
+  category   UserCategoryEnum
+  created_at DateTime         @default(now())
+  updated_at DateTime?        @updatedAt
+  deleted_at DateTime?
+  Teachers   Teachers?
+
+  @@map("users")
+}
+
+enum WeekdaysEnum {
+  SUNDAY
+  MONDAY
+  TUESDAY
+  WEDNESDAY
+  THURSDAY
+  FRIDAY
+  SATURDAY
+}
+
+enum SubjectsEnum {
+  ARTS
+  BIOLOGY
+  SCIENCE
+  PHYSICAL_EDUCATION
+  PHYSICS
+  GEOGRAPHY
+  HISTORY
+  MATH
+  PORTUGUESE
+  CHEMISTRY
+}
+
+model TeachingSchedules {
+  id         Int          @id @default(autoincrement())
+  week_day   WeekdaysEnum
+  from       String
+  to         String
+  teacher_id Int
+  Teachers   Teachers     @relation(fields: [teacher_id], references: [id])
+  created_at DateTime     @default(now())
+  updated_at DateTime?    @updatedAt
+  deleted_at DateTime?
+
+  @@map("teaching_schedules")
+}
+
+model Teachers {
+  id         Int                 @id @default(autoincrement())
+  biography  String
+  subject    SubjectsEnum
+  cost       Float
+  schedules  TeachingSchedules[]
+  userId     Int                 @unique @map("user_id")
+  user       Users               @relation(fields: [userId], references: [id])
+  created_at DateTime            @default(now())
+  updated_at DateTime?           @updatedAt
+  deleted_at DateTime?
+
+  @@map("teachers")
 }
