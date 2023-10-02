@@ -2,10 +2,12 @@ import { Injectable } from '@nestjs/common';
 
 import { PrismaService } from 'src/database/prisma/prisma.service';
 import { User } from '@prisma/client';
-
 import UserEntity from '../../domain/entities/user.entity';
+
+import { ListUserParamsDto } from '../../domain/dtos/list-user-params.dto';
 import { CreateUserDto } from '../../domain/dtos/create-user.dto';
 import { UpdateUserDto } from '../../domain/dtos/update-user.dto';
+import { FindAllResponseDto } from 'src/shared/dtos/find-all-response.dto';
 
 @Injectable()
 export class UserRepository {
@@ -17,10 +19,39 @@ export class UserRepository {
     return UserEntity.fromPrisma(user);
   }
 
-  async findAll(): Promise<Array<UserEntity>> {
-    const users = await this.prismaService.user.findMany();
+  async findAll(
+    params: ListUserParamsDto,
+  ): Promise<FindAllResponseDto<Array<UserEntity>>> {
+    const skip = params.skip ? +params.skip : undefined;
+    const take = params.take ? +params.take : undefined;
+    const orderBy = params.orderBy ?? 'id';
+    const ordering = params.ordering ?? 'desc';
 
-    return users.map((user) => UserEntity.fromPrisma(user));
+    const [total, prismaUsers] = await this.prismaService.$transaction([
+      this.prismaService.user.count({
+        where: {
+          name: { contains: params.search, mode: 'insensitive' },
+        },
+      }),
+      this.prismaService.user.findMany({
+        skip: skip,
+        take: take,
+        where: {
+          name: { contains: params.search, mode: 'insensitive' },
+        },
+        orderBy: {
+          [orderBy]: ordering,
+        },
+      }),
+    ]);
+
+    const users = prismaUsers.map((user) => UserEntity.fromPrisma(user));
+
+    return {
+      data: users,
+      total: total,
+      pages: take ? Math.round(total / take) : 0,
+    };
   }
 
   async findOne(id: number): Promise<UserEntity> {

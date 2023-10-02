@@ -13,11 +13,16 @@ import {
   Param,
   Delete,
   HttpStatus,
+  Query,
 } from '@nestjs/common';
 
-import { UserService } from '../../services/user.service';
+import { ListUserParamsDto } from '../../domain/dtos/list-user-params.dto';
 import { CreateUserDto } from '../../domain/dtos/create-user.dto';
 import { UpdateUserDto } from '../../domain/dtos/update-user.dto';
+import { FindAllResponseDto } from 'src/shared/dtos/find-all-response.dto';
+
+import { UserService } from '../../services/user.service';
+
 import UserEntity from '../../domain/entities/user.entity';
 
 import { Public } from 'src/shared/decorators/public.decorator';
@@ -58,8 +63,10 @@ export class UserController {
     },
   })
   @Get()
-  findAll(): Promise<Array<UserEntity>> {
-    return this.userService.findAll();
+  findAll(
+    @Query() params: ListUserParamsDto,
+  ): Promise<FindAllResponseDto<Array<UserEntity>>> {
+    return this.userService.findAll(params);
   }
 
   @ApiOperation({

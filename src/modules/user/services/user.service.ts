@@ -2,9 +2,12 @@ import { Injectable } from '@nestjs/common';
 
 import { UserRepository } from '../infra/repositories/user.repository';
 
-import UserEntity from '../domain/entities/user.entity';
+import { ListUserParamsDto } from '../domain/dtos/list-user-params.dto';
 import { CreateUserDto } from '../domain/dtos/create-user.dto';
 import { UpdateUserDto } from '../domain/dtos/update-user.dto';
+import { FindAllResponseDto } from 'src/shared/dtos/find-all-response.dto';
+
+import UserEntity from '../domain/entities/user.entity';
 import { User } from '@prisma/client';
 
 @Injectable()
@@ -23,8 +26,10 @@ export class UserService {
     return await this.userRepository.create(createUserDto);
   }
 
-  async findAll(): Promise<Array<UserEntity>> {
-    return await this.userRepository.findAll();
+  async findAll(
+    params: ListUserParamsDto,
+  ): Promise<FindAllResponseDto<Array<UserEntity>>> {
+    return await this.userRepository.findAll(params);
   }
 
   async findOne(id: number): Promise<UserEntity> {
