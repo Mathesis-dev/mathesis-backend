@@ -27,7 +27,7 @@
     "test:e2e": "jest --config ./test/jest-e2e.json"
   },
   "prisma": {
-    "seed": "ts-node prisma/seeds/seed.ts"
+    "seed": "prisma generate && ts-node prisma/seed/index.ts"
   },
   "dependencies": {
     "@faker-js/faker": "^8.1.0",
