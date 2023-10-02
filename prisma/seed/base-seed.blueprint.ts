@@ -11,20 +11,27 @@ export class BaseSeed {
   }
 
   public async seed() {
-    for (const entity of this.entities) {
-      await this.prismaRepository.create({
-        data: entity,
-      });
-    }
+    await Promise.all(
+      this.entities.map(async (entity) => {
+        await this.prismaRepository.create({
+          data: entity,
+        });
+      }),
+    );
   }
 
   public async clear() {
-    for (const entity of this.entities) {
-      const found = await this.prismaRepository.findFirst({
-        where: entity,
-      });
-      await this.prismaRepository.delete({ where: { id: found.id } });
-    }
+    Promise.all(
+      this.entities.map(async (entity) => {
+        const found = await this.prismaRepository.findFirst({
+          where: entity,
+        });
+
+        if (!found) return;
+
+        await this.prismaRepository.delete({ where: { id: found.id } });
+      }),
+    );
   }
 
   public async reset() {
