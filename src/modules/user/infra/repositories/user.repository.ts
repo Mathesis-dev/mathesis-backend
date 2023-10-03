@@ -1,13 +1,13 @@
 import { Injectable } from '@nestjs/common';
 
-import { PrismaService } from 'src/database/prisma/prisma.service';
 import { User } from '@prisma/client';
+import { PrismaService } from 'src/database/prisma/prisma.service';
 import UserEntity from '../../domain/entities/user.entity';
 
-import { ListUserParamsDto } from '../../domain/dtos/list-user-params.dto';
-import { CreateUserDto } from '../../domain/dtos/create-user.dto';
-import { UpdateUserDto } from '../../domain/dtos/update-user.dto';
 import { FindAllResponseDto } from 'src/shared/dtos/find-all-response.dto';
+import { CreateUserDto } from '../../domain/dtos/create-user.dto';
+import { ListUserParamsDto } from '../../domain/dtos/list-user-params.dto';
+import { UpdateUserDto } from '../../domain/dtos/update-user.dto';
 
 @Injectable()
 export class UserRepository {
@@ -16,7 +16,7 @@ export class UserRepository {
   async create(createUserDto: CreateUserDto): Promise<UserEntity> {
     const user = await this.prismaService.user.create({ data: createUserDto });
 
-    return UserEntity.fromPrisma(user);
+    return UserEntity.fromPrisma({ ...user, password: undefined });
   }
 
   async findAll(
@@ -45,7 +45,9 @@ export class UserRepository {
       }),
     ]);
 
-    const users = prismaUsers.map((user) => UserEntity.fromPrisma(user));
+    const users = prismaUsers.map((user) =>
+      UserEntity.fromPrisma({ ...user, password: undefined }),
+    );
 
     return {
       data: users,
@@ -61,13 +63,13 @@ export class UserRepository {
       },
     });
 
-    return UserEntity.fromPrisma(user);
+    return UserEntity.fromPrisma({ ...user, password: undefined });
   }
 
   async findOneBy(where: Partial<User>): Promise<UserEntity> {
     const user = await this.prismaService.user.findUnique({ where });
 
-    return UserEntity.fromPrisma(user);
+    return UserEntity.fromPrisma({ ...user, password: undefined });
   }
 
   async update(id: number, updateUserDto: UpdateUserDto): Promise<UserEntity> {
@@ -78,7 +80,7 @@ export class UserRepository {
       data: updateUserDto,
     });
 
-    return UserEntity.fromPrisma(user);
+    return UserEntity.fromPrisma({ ...user, password: undefined });
   }
 
   async remove(id: number): Promise<UserEntity> {
@@ -88,6 +90,6 @@ export class UserRepository {
       },
     });
 
-    return UserEntity.fromPrisma(user);
+    return UserEntity.fromPrisma({ ...user, password: undefined });
   }
 }
