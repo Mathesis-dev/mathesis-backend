@@ -12,69 +12,69 @@ enum UserCategoryEnum {
   STUDENT
 }
 
-model Users {
-  id         Int              @id @default(autoincrement())
-  name       String
-  email      String           @unique
-  phone      String
-  password   String
-  category   UserCategoryEnum
-  created_at DateTime         @default(now())
-  updated_at DateTime?        @updatedAt
-  deleted_at DateTime?
-  Teachers   Teachers?
+model User {
+  id        Int              @id @default(autoincrement())
+  name      String
+  email     String           @unique
+  password  String
+  category  UserCategoryEnum
+  createdAt DateTime         @default(now()) @map("created_at")
+  updatedAt DateTime?        @updatedAt @map("updated_at")
+  deletedAt DateTime?        @map("deleted_at")
+  // Teacher   Teacher?
 
   @@map("users")
 }
 
-enum WeekdaysEnum {
-  SUNDAY
-  MONDAY
-  TUESDAY
-  WEDNESDAY
-  THURSDAY
-  FRIDAY
-  SATURDAY
-}
+// enum WeekdayEnum {
+//   SUNDAY
+//   MONDAY
+//   TUESDAY
+//   WEDNESDAY
+//   THURSDAY
+//   FRIDAY
+//   SATURDAY
+// }
 
-enum SubjectsEnum {
-  ARTS
-  BIOLOGY
-  SCIENCE
-  PHYSICAL_EDUCATION
-  PHYSICS
-  GEOGRAPHY
-  HISTORY
-  MATH
-  PORTUGUESE
-  CHEMISTRY
-}
+// enum SubjectEnum {
+//   ARTS
+//   BIOLOGY
+//   SCIENCE
+//   PHYSICAL_EDUCATION
+//   PHYSICS
+//   GEOGRAPHY
+//   HISTORY
+//   MATH
+//   PORTUGUESE
+//   CHEMISTRY
+// }
 
-model TeachingSchedules {
-  id         Int          @id @default(autoincrement())
-  week_day   WeekdaysEnum
-  from       String
-  to         String
-  teacher_id Int
-  Teachers   Teachers     @relation(fields: [teacher_id], references: [id])
-  created_at DateTime     @default(now())
-  updated_at DateTime?    @updatedAt
-  deleted_at DateTime?
+// model TeachingSchedules {
+//   id        Int         @id @default(autoincrement())
+//   weekDay   WeekdayEnum @map("week_day")
+//   from      String
+//   to        String
+//   teacherId Int         @map("teacher_id")
+//   Teachers  Teacher     @relation(fields: [teacherId], references: [id])
+//   createdAt DateTime    @default(now()) @map("created_at")
+//   updatedAt DateTime?   @updatedAt @map("updated_at")
+//   deletedAt DateTime?   @map("deleted_at")
 
-  @@map("teaching_schedules")
-}
+//   @@map("teaching_schedules")
+// }
 
-model Teachers {
-  id         Int                 @id @default(autoincrement())
-  biography  String
-  subject    SubjectsEnum
-  cost       Float
-  schedules  TeachingSchedules[]
-  userId     Int                 @unique @map("user_id")
-  user       Users               @relation(fields: [userId], references: [id])
-  created_at DateTime            @default(now())
-  updated_at DateTime?           @updatedAt
-  deleted_at DateTime?
+// model Teacher {
+//   id        Int                 @id @default(autoincrement())
+//   phone     String
+//   biography String
+//   subject   SubjectEnum
+//   cost      Float
+//   schedules TeachingSchedules[]
+//   userId    Int                 @unique @map("user_id")
+//   user      User                @relation(fields: [userId], references: [id])
+//   createdAt DateTime            @default(now()) @map("created_at")
+//   updatedAt DateTime?           @updatedAt @map("updated_at")
+//   deletedAt DateTime?           @map("deleted_at")
 
-  @@map("teachers")
-}
+//   @@map("teachers")
+// }

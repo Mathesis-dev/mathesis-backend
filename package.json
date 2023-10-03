@@ -24,12 +24,11 @@
     "test:watch": "jest --watch",
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
-    "test:e2e": "jest --config ./test/jest-e2e.json"
-  },
-  "prisma": {
-    "seed": "ts-node prisma/seeds/seed.ts"
+    "test:e2e": "jest --config ./test/jest-e2e.json",
+    "seed": "prisma generate && ts-node prisma/seed/index.ts"
   },
   "dependencies": {
+    "@faker-js/faker": "^8.1.0",
     "@nestjs/common": "^9.0.0",
     "@nestjs/core": "^9.0.0",
     "@nestjs/platform-express": "^9.0.0",
