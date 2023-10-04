@@ -41,8 +41,11 @@ export class UserService {
     return await this.userRepository.findOne(id);
   }
 
-  async findOneBy(where: Partial<User>): Promise<UserEntity> {
-    return await this.userRepository.findOneBy(where);
+  async findOneBy(
+    where: Partial<User>,
+    removePassword = true,
+  ): Promise<UserEntity> {
+    return await this.userRepository.findOneBy(where, removePassword);
   }
 
   async update(id: number, updateUserDto: UpdateUserDto): Promise<UserEntity> {

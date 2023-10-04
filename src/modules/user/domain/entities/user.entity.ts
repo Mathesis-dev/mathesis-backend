@@ -40,6 +40,8 @@ export default class UserEntity {
   }
 
   static fromPrisma(user: User): UserEntity {
+    if (!user) return null;
+
     return new UserEntity({
       id: user.id,
       name: user.name,

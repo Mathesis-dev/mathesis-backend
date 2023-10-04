@@ -66,12 +66,16 @@ export class UserRepository {
     return UserEntity.fromPrisma({ ...user, password: undefined });
   }
 
-  async findOneBy(where: Partial<User>): Promise<UserEntity> {
+  async findOneBy(
+    where: Partial<User>,
+    removePassword = true,
+  ): Promise<UserEntity> {
     const user = await this.prismaService.user.findUnique({ where });
 
-    if (!user) return null;
-
-    return UserEntity.fromPrisma({ ...user, password: undefined });
+    return UserEntity.fromPrisma({
+      ...user,
+      password: removePassword ? undefined : user.password,
+    });
   }
 
   async update(id: number, updateUserDto: UpdateUserDto): Promise<UserEntity> {
