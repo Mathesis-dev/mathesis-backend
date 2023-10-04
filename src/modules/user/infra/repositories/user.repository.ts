@@ -69,6 +69,8 @@ export class UserRepository {
   async findOneBy(where: Partial<User>): Promise<UserEntity> {
     const user = await this.prismaService.user.findUnique({ where });
 
+    if (!user) return null;
+
     return UserEntity.fromPrisma({ ...user, password: undefined });
   }
 
