@@ -2,13 +2,15 @@ import { Injectable } from '@nestjs/common';
 
 import { UserRepository } from '../infra/repositories/user.repository';
 
-import { ListUserParamsDto } from '../domain/dtos/list-user-params.dto';
-import { CreateUserDto } from '../domain/dtos/create-user.dto';
-import { UpdateUserDto } from '../domain/dtos/update-user.dto';
 import { FindAllResponseDto } from 'src/shared/dtos/find-all-response.dto';
+import { CreateUserDto } from '../domain/dtos/create-user.dto';
+import { ListUserParamsDto } from '../domain/dtos/list-user-params.dto';
+import { UpdateUserDto } from '../domain/dtos/update-user.dto';
 
-import UserEntity from '../domain/entities/user.entity';
 import { User } from '@prisma/client';
+import UserEntity from '../domain/entities/user.entity';
+
+import * as bcrypt from 'bcrypt';
 
 @Injectable()
 export class UserService {
@@ -23,7 +25,10 @@ export class UserService {
       throw new Error('Usuário já existe');
     }
 
-    return await this.userRepository.create(createUserDto);
+    return await this.userRepository.create({
+      ...createUserDto,
+      password: await bcrypt.hash(createUserDto.password, 10),
+    });
   }
 
   async findAll(
@@ -36,8 +41,11 @@ export class UserService {
     return await this.userRepository.findOne(id);
   }
 
-  async findOneBy(where: Partial<User>): Promise<UserEntity> {
-    return await this.userRepository.findOneBy(where);
+  async findOneBy(
+    where: Partial<User>,
+    removePassword = true,
+  ): Promise<UserEntity> {
+    return await this.userRepository.findOneBy(where, removePassword);
   }
 
   async update(id: number, updateUserDto: UpdateUserDto): Promise<UserEntity> {

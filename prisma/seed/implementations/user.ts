@@ -7,13 +7,13 @@ const USERS: Array<Partial<UserEntity>> = [
   {
     name: 'Teste Professor',
     email: 'testeprofessor@gmail.com',
-    password: 'Teste123@',
+    password: '$2b$10$l7hl8O5T474n2ZD6m5QBB.9xrBlNnobHFtuSRSSnSGGrGVT/poB9C',
     category: UserCategoryEnum.TEACHER,
   },
   {
     name: 'Teste Aluno',
     email: 'testealuno@gmail.com',
-    password: 'Teste123@',
+    password: '$2b$10$l7hl8O5T474n2ZD6m5QBB.9xrBlNnobHFtuSRSSnSGGrGVT/poB9C',
     category: UserCategoryEnum.STUDENT,
   },
 ];
