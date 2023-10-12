@@ -36,6 +36,8 @@ export class TeacherRepository {
     const [total, prismaTeachers] = await this.prismaService.$transaction([
       this.prismaService.teacher.count({
         where: {
+          state: params.state,
+          city: params.city,
           user: {
             name: { contains: params.search, mode: 'insensitive' },
           },
@@ -45,6 +47,8 @@ export class TeacherRepository {
         skip: skip,
         take: take,
         where: {
+          state: params.state,
+          city: params.city,
           user: {
             name: { contains: params.search, mode: 'insensitive' },
           },
