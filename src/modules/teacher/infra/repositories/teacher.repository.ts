@@ -41,6 +41,11 @@ export class TeacherRepository {
           user: {
             name: { contains: params.search, mode: 'insensitive' },
           },
+          schedules: {
+            some: {
+              subject: params.subject,
+            },
+          },
         },
       }),
       this.prismaService.teacher.findMany({
@@ -52,9 +57,15 @@ export class TeacherRepository {
           user: {
             name: { contains: params.search, mode: 'insensitive' },
           },
+          schedules: {
+            some: {
+              subject: params.subject,
+            },
+          },
         },
         include: {
           user: true,
+          schedules: true,
         },
         orderBy: {
           [orderBy]: ordering,
