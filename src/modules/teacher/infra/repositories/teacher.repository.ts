@@ -19,10 +19,11 @@ export class TeacherRepository {
       data: createTeacherDto,
       include: {
         user: true,
+        schedules: true,
       },
     });
 
-    return TeacherEntity.fromPrisma(teacher, teacher.user);
+    return TeacherEntity.fromPrisma(teacher, teacher.user, teacher.schedules);
   }
 
   async findAll(
@@ -38,6 +39,7 @@ export class TeacherRepository {
         where: {
           state: params.state,
           city: params.city,
+          deletedAt: null,
           user: {
             name: { contains: params.search, mode: 'insensitive' },
           },
@@ -54,6 +56,7 @@ export class TeacherRepository {
         where: {
           state: params.state,
           city: params.city,
+          deletedAt: null,
           user: {
             name: { contains: params.search, mode: 'insensitive' },
           },
@@ -74,7 +77,7 @@ export class TeacherRepository {
     ]);
 
     const teachers = prismaTeachers.map((teacher) =>
-      TeacherEntity.fromPrisma(teacher, teacher.user),
+      TeacherEntity.fromPrisma(teacher, teacher.user, teacher.schedules),
     );
 
     return {
@@ -91,19 +94,20 @@ export class TeacherRepository {
       },
       include: {
         user: true,
+        schedules: true,
       },
     });
 
-    return TeacherEntity.fromPrisma(teacher, teacher.user);
+    return TeacherEntity.fromPrisma(teacher, teacher.user, teacher.schedules);
   }
 
   async findOneBy(where: Partial<Teacher>): Promise<TeacherEntity> {
     const teacher = await this.prismaService.teacher.findUnique({
       where,
-      include: { user: true },
+      include: { user: true, schedules: true },
     });
 
-    return TeacherEntity.fromPrisma(teacher, teacher.user);
+    return TeacherEntity.fromPrisma(teacher, teacher.user, teacher.schedules);
   }
 
   async update(
@@ -117,10 +121,11 @@ export class TeacherRepository {
       data: updateTeacherDto,
       include: {
         user: true,
+        schedules: true,
       },
     });
 
-    return TeacherEntity.fromPrisma(teacher, teacher.user);
+    return TeacherEntity.fromPrisma(teacher, teacher.user, teacher.schedules);
   }
 
   async remove(id: number): Promise<TeacherEntity> {
@@ -130,9 +135,10 @@ export class TeacherRepository {
       },
       include: {
         user: true,
+        schedules: true,
       },
     });
 
-    return TeacherEntity.fromPrisma(teacher, teacher.user);
+    return TeacherEntity.fromPrisma(teacher, teacher.user, teacher.schedules);
   }
 }

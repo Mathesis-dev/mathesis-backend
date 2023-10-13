@@ -21,7 +21,7 @@ model User {
   createdAt DateTime         @default(now()) @map("created_at")
   updatedAt DateTime?        @updatedAt @map("updated_at")
   deletedAt DateTime?        @map("deleted_at")
-  Teacher   Teacher?
+  teacher   Teacher?
 
   @@map("users")
 }
@@ -57,7 +57,7 @@ model TeachingSchedules {
   to            String
   cost          Float
   teacherId     Int         @map("teacher_id")
-  Teachers      Teacher     @relation(fields: [teacherId], references: [id])
+  teacher       Teacher     @relation(fields: [teacherId], references: [id])
   onlineClass   Boolean     @default(true) @map("online_class")
   inPersonClass Boolean     @default(true) @map("in_person_class")
   createdAt     DateTime    @default(now()) @map("created_at")

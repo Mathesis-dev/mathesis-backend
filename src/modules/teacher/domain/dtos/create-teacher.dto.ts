@@ -1,7 +1,13 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsNotEmpty, IsNumber, IsPhoneNumber, IsString } from 'class-validator';
+import {
+  IsNotEmpty,
+  IsNumber,
+  IsObject,
+  IsPhoneNumber,
+  IsString,
+} from 'class-validator';
+import { CreateScheduleDto } from '../../submodules/schedules/domain/dtos/create-schedule.dto';
 
-// TODO - Adicionar schedules
 export class CreateTeacherDto {
   @ApiProperty({
     description: 'Whatsapp do professor',
@@ -9,7 +15,7 @@ export class CreateTeacherDto {
   })
   @IsString({ message: 'Telefone inválido' })
   @IsNotEmpty({ message: 'Telefone é obrigatório' })
-  @IsPhoneNumber('BR', { message: 'Telefone inválido' }) // TODO - Validar
+  @IsPhoneNumber('BR', { message: 'Telefone inválido' })
   phone: string;
 
   @ApiProperty({
@@ -20,6 +26,15 @@ export class CreateTeacherDto {
   @IsString({ message: 'Biografia em formato inválido' })
   @IsNotEmpty({ message: 'Biografia é obrigatória' })
   biography: string;
+
+  @ApiProperty({
+    description: 'Cronograma de aulas do professor',
+    type: Array<CreateScheduleDto>,
+    isArray: true,
+  })
+  @IsObject({ message: 'Cronograma em formato inválido' }) // TODO - Trocar por array de objetos
+  @IsNotEmpty({ message: 'Cronograma é obrigatório' })
+  schedules: Array<CreateScheduleDto>;
 
   @ApiProperty({
     description: 'ID do usuário',

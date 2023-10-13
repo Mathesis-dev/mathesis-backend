@@ -1,11 +1,12 @@
-import { Teacher, User } from '@prisma/client';
+import { Teacher, TeachingSchedules, User } from '@prisma/client';
 import UserEntity from 'src/modules/user/domain/entities/user.entity';
+import ScheduleEntity from '../../submodules/schedules/domain/entities/schedule.entity';
 
 export default class TeacherEntity {
   readonly id: number;
   readonly phone: string;
   readonly biography: string;
-  // readonly schedules: Array<TeachingSchedulesEntity>; // TODO - Adicionar schedules
+  readonly schedules: Array<ScheduleEntity>;
   readonly userId: number;
   readonly user: UserEntity;
   readonly city: string;
@@ -21,6 +22,7 @@ export default class TeacherEntity {
     id,
     phone,
     biography,
+    schedules,
     userId,
     user,
     city,
@@ -35,6 +37,7 @@ export default class TeacherEntity {
     id: number;
     phone: string;
     biography: string;
+    schedules: Array<ScheduleEntity>;
     userId: number;
     user: UserEntity;
     city: string;
@@ -49,6 +52,7 @@ export default class TeacherEntity {
     this.id = id;
     this.phone = phone;
     this.biography = biography;
+    this.schedules = schedules;
     this.userId = userId;
     this.user = user;
     this.city = city;
@@ -61,13 +65,20 @@ export default class TeacherEntity {
     this.deletedAt = deletedAt;
   }
 
-  static fromPrisma(teacher: Teacher, user: User): TeacherEntity {
+  static fromPrisma(
+    teacher: Teacher,
+    user: User,
+    schedules: Array<TeachingSchedules>,
+  ): TeacherEntity {
     if (!teacher) return null;
 
     return new TeacherEntity({
       id: teacher.id,
       phone: teacher.phone,
       biography: teacher.biography,
+      schedules: schedules.map((schedule) =>
+        ScheduleEntity.fromPrisma(schedule, teacher),
+      ),
       userId: teacher.userId,
       user: UserEntity.fromPrisma(user),
       city: teacher.city,
