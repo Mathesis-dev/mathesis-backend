@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 
 import { FindAllResponseDto } from 'src/shared/dtos/find-all-response.dto';
 
@@ -21,7 +21,9 @@ export class ScheduleService {
     });
 
     if (scheduleExists) {
-      throw new Error('Aula/cronograma já está cadastrada na plataforma');
+      throw new BadRequestException(
+        'Aula/cronograma já está cadastrada na plataforma',
+      );
     }
 
     return await this.scheduleRepository.create(createScheduleDto);
@@ -51,7 +53,7 @@ export class ScheduleService {
     });
 
     if (!scheduleExists) {
-      throw new Error('Esse cronograma/aula não existe');
+      throw new BadRequestException('Esse cronograma/aula não existe');
     }
 
     return await this.scheduleRepository.update(id, updateScheduleDto);
@@ -63,7 +65,7 @@ export class ScheduleService {
     });
 
     if (!scheduleExists) {
-      throw new Error('Esse cronograma/aula não existe');
+      throw new BadRequestException('Esse cronograma/aula não existe');
     }
 
     return await this.scheduleRepository.remove(id);

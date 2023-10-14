@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 
 import { FindAllResponseDto } from 'src/shared/dtos/find-all-response.dto';
 
@@ -19,7 +19,7 @@ export class TeacherService {
     });
 
     if (teacherExists) {
-      throw new Error('Professor já é cadastrado na plataforma');
+      throw new BadRequestException('Professor já é cadastrado na plataforma');
     }
 
     return await this.teacherRepository.create(createTeacherDto);
@@ -48,7 +48,7 @@ export class TeacherService {
     });
 
     if (!teacherExists) {
-      throw new Error('Esse professor não existe');
+      throw new BadRequestException('Esse professor não existe');
     }
 
     return await this.teacherRepository.update(id, updateTeacherDto);
@@ -60,7 +60,7 @@ export class TeacherService {
     });
 
     if (!teacherExists) {
-      throw new Error('Esse professor não existe');
+      throw new BadRequestException('Esse professor não existe');
     }
 
     return await this.teacherRepository.remove(id);

@@ -19,7 +19,7 @@ seed()
     console.log('🌱 Seeding finished.');
   })
   .catch(async (e) => {
-    console.error(e);
+    console.error('🌱⚠️ Seeding error ->', e);
     await prisma.$disconnect();
     process.exit(1);
   });
