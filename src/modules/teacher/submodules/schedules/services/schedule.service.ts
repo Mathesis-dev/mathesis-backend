@@ -27,10 +27,11 @@ export class ScheduleService {
     return await this.scheduleRepository.create(createScheduleDto);
   }
 
-  async findAll(
+  async findAllByTeacherId(
     params: ListScheduleParamsDto,
+    id: number,
   ): Promise<FindAllResponseDto<Array<ScheduleEntity>>> {
-    return await this.scheduleRepository.findAll(params);
+    return await this.scheduleRepository.findAllByTeacherId(params, id);
   }
 
   async findOne(id: number): Promise<ScheduleEntity> {

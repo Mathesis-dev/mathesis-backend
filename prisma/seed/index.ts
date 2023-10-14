@@ -4,11 +4,13 @@ const prisma = new PrismaClient();
 
 import { UserSeed } from './implementations/user';
 import { TeacherSeed } from './implementations/teacher';
+import { ScheduleSeed } from './implementations/schedule';
 
 export const seed = async () => {
   console.log('🍃 Started seeding ...');
   new UserSeed().reset();
   new TeacherSeed().reset();
+  new ScheduleSeed().reset();
 };
 
 seed()

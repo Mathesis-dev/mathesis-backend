@@ -25,8 +25,9 @@ export class ScheduleRepository {
     return ScheduleEntity.fromPrisma(schedule, schedule.teacher);
   }
 
-  async findAll(
+  async findAllByTeacherId(
     params: ListScheduleParamsDto,
+    id: number,
   ): Promise<FindAllResponseDto<Array<ScheduleEntity>>> {
     const skip = params.skip ? +params.skip : undefined;
     const take = params.take ? +params.take : undefined;
@@ -37,6 +38,8 @@ export class ScheduleRepository {
       this.prismaService.teachingSchedules.count({
         where: {
           deletedAt: null,
+          teacherId: id,
+          subject: params.subject,
         },
       }),
       this.prismaService.teachingSchedules.findMany({
@@ -44,6 +47,8 @@ export class ScheduleRepository {
         take: take,
         where: {
           deletedAt: null,
+          teacherId: id,
+          subject: params.subject,
         },
         include: {
           teacher: true,

@@ -25,7 +25,6 @@ export class TeacherSeed extends BaseSeed {
   sampleGenerator = (): Teacher => {
     return {
       id: faker.number.int(),
-      // schedules: [], // TODO - Adicionar schedules
       phone: '+55 (48) 99999-9999',
       biography: faker.lorem.paragraph(),
       userId: 1,
