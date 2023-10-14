@@ -16,7 +16,14 @@ export class TeacherRepository {
 
   async create(createTeacherDto: CreateTeacherDto): Promise<TeacherEntity> {
     const teacher = await this.prismaService.teacher.create({
-      data: createTeacherDto,
+      data: {
+        ...createTeacherDto,
+        schedules: {
+          createMany: {
+            data: createTeacherDto.schedules,
+          },
+        },
+      },
       include: {
         user: true,
         schedules: true,
@@ -118,7 +125,19 @@ export class TeacherRepository {
       where: {
         id,
       },
-      data: updateTeacherDto,
+      data: {
+        ...updateTeacherDto,
+        schedules: {
+          updateMany: {
+            data: updateTeacherDto.schedules,
+            where: {
+              id: {
+                in: updateTeacherDto.schedules.map((schedule) => schedule.id),
+              },
+            },
+          },
+        },
+      },
       include: {
         user: true,
         schedules: true,
