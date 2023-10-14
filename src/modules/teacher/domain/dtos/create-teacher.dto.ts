@@ -1,12 +1,15 @@
 import { ApiProperty } from '@nestjs/swagger';
 import {
+  ArrayNotEmpty,
   IsNotEmpty,
   IsNumber,
   IsObject,
   IsPhoneNumber,
   IsString,
+  ValidateNested,
 } from 'class-validator';
 import { CreateScheduleDto } from '../../submodules/schedules/domain/dtos/create-schedule.dto';
+import { Type } from 'class-transformer';
 
 export class CreateTeacherDto {
   @ApiProperty({
@@ -29,11 +32,12 @@ export class CreateTeacherDto {
 
   @ApiProperty({
     description: 'Cronograma de aulas do professor',
-    type: Array<CreateScheduleDto>,
+    type: CreateScheduleDto,
     isArray: true,
   })
-  @IsObject({ message: 'Cronograma em formato inválido' }) // TODO - Trocar por array de objetos
-  @IsNotEmpty({ message: 'Cronograma é obrigatório' })
+  @ValidateNested({ each: true })
+  @Type(() => CreateScheduleDto)
+  @ArrayNotEmpty({ message: 'Cronograma de aulas não pode ser vazio' })
   schedules: Array<CreateScheduleDto>;
 
   @ApiProperty({
