@@ -18,7 +18,7 @@ const SCHEDULES: Array<Partial<ScheduleEntity>> = [
 
 export class ScheduleSeed extends BaseSeed {
   constructor() {
-    super(SCHEDULES, 'schedule');
+    super(SCHEDULES, 'teachingSchedules');
   }
 
   sampleGenerator = (): TeachingSchedules => {
