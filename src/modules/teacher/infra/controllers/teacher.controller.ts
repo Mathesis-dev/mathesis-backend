@@ -31,7 +31,7 @@ import TeacherEntity from '../../domain/entities/teacher.entity';
 import { TeacherService } from '../../services/teacher.service';
 
 @ApiBearerAuth()
-@ApiTags('teachers')
+@ApiTags('Teachers')
 @Controller('teachers')
 export class TeacherController {
   constructor(private readonly teacherService: TeacherService) {}

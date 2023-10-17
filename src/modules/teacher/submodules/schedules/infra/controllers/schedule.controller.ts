@@ -31,7 +31,7 @@ import ScheduleEntity from '../../domain/entities/schedule.entity';
 import { ScheduleService } from '../../services/schedule.service';
 
 @ApiBearerAuth()
-@ApiTags('schedules')
+@ApiTags('Schedules')
 @Controller('schedules')
 export class ScheduleController {
   constructor(private readonly scheduleService: ScheduleService) {}
