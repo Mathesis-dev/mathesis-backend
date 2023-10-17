@@ -66,7 +66,7 @@ export class ScheduleController {
       example: new ScheduleSeed().sampleGenerator(),
     },
   })
-  @Get(':id')
+  @Get('/teacher/:id')
   findAllByTeacherId(
     @Query() params: ListScheduleParamsDto,
     @Param('id') id: number,
