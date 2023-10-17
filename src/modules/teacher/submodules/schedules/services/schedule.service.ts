@@ -18,9 +18,10 @@ export class ScheduleService {
       from: createScheduleDto.from,
       to: createScheduleDto.to,
       subject: createScheduleDto.subject,
+      teacherId: createScheduleDto.teacherId,
     });
 
-    if (scheduleExists) {
+    if (scheduleExists?.id) {
       throw new BadRequestException(
         'Aula/cronograma já está cadastrada na plataforma',
       );

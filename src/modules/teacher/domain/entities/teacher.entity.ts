@@ -76,9 +76,11 @@ export default class TeacherEntity {
       id: teacher.id,
       phone: teacher.phone,
       biography: teacher.biography,
-      schedules: schedules.map((schedule) =>
-        ScheduleEntity.fromPrisma(schedule, teacher),
-      ),
+      schedules: schedules
+        ? schedules.map((schedule) =>
+            ScheduleEntity.fromPrisma(schedule, teacher),
+          )
+        : [],
       userId: teacher.userId,
       user: UserEntity.fromPrisma(user),
       city: teacher.city,

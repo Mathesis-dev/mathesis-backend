@@ -22,7 +22,7 @@ export class ScheduleRepository {
       },
     });
 
-    return ScheduleEntity.fromPrisma(schedule, schedule.teacher);
+    return ScheduleEntity.fromPrisma(schedule, schedule?.teacher);
   }
 
   async findAllByTeacherId(
@@ -60,7 +60,7 @@ export class ScheduleRepository {
     ]);
 
     const schedules = prismaSchedules.map((schedule) =>
-      ScheduleEntity.fromPrisma(schedule, schedule.teacher),
+      ScheduleEntity.fromPrisma(schedule, schedule?.teacher),
     );
 
     return {
@@ -80,7 +80,7 @@ export class ScheduleRepository {
       },
     });
 
-    return ScheduleEntity.fromPrisma(schedule, schedule.teacher);
+    return ScheduleEntity.fromPrisma(schedule, schedule?.teacher);
   }
 
   async findOneBy(where: Partial<TeachingSchedules>): Promise<ScheduleEntity> {
@@ -89,7 +89,7 @@ export class ScheduleRepository {
       include: { teacher: true },
     });
 
-    return ScheduleEntity.fromPrisma(schedule, schedule.teacher);
+    return ScheduleEntity.fromPrisma(schedule, schedule?.teacher);
   }
 
   async update(
@@ -106,7 +106,7 @@ export class ScheduleRepository {
       },
     });
 
-    return ScheduleEntity.fromPrisma(schedule, schedule.teacher);
+    return ScheduleEntity.fromPrisma(schedule, schedule?.teacher);
   }
 
   async remove(id: number): Promise<ScheduleEntity> {
@@ -119,6 +119,6 @@ export class ScheduleRepository {
       },
     });
 
-    return ScheduleEntity.fromPrisma(schedule, schedule.teacher);
+    return ScheduleEntity.fromPrisma(schedule, schedule?.teacher);
   }
 }

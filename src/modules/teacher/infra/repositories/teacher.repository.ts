@@ -15,12 +15,17 @@ export class TeacherRepository {
   constructor(private readonly prismaService: PrismaService) {}
 
   async create(createTeacherDto: CreateTeacherDto): Promise<TeacherEntity> {
+    const schedules = createTeacherDto.schedules.map((schedule) => {
+      delete schedule.teacherId;
+      return schedule;
+    });
+
     const teacher = await this.prismaService.teacher.create({
       data: {
         ...createTeacherDto,
         schedules: {
           createMany: {
-            data: createTeacherDto.schedules,
+            data: schedules,
           },
         },
       },
@@ -30,7 +35,7 @@ export class TeacherRepository {
       },
     });
 
-    return TeacherEntity.fromPrisma(teacher, teacher.user, teacher.schedules);
+    return TeacherEntity.fromPrisma(teacher, teacher?.user, teacher?.schedules);
   }
 
   async findAll(
@@ -84,7 +89,7 @@ export class TeacherRepository {
     ]);
 
     const teachers = prismaTeachers.map((teacher) =>
-      TeacherEntity.fromPrisma(teacher, teacher.user, teacher.schedules),
+      TeacherEntity.fromPrisma(teacher, teacher?.user, teacher?.schedules),
     );
 
     return {
@@ -105,7 +110,7 @@ export class TeacherRepository {
       },
     });
 
-    return TeacherEntity.fromPrisma(teacher, teacher.user, teacher.schedules);
+    return TeacherEntity.fromPrisma(teacher, teacher?.user, teacher?.schedules);
   }
 
   async findOneBy(where: Partial<Teacher>): Promise<TeacherEntity> {
@@ -114,13 +119,18 @@ export class TeacherRepository {
       include: { user: true, schedules: true },
     });
 
-    return TeacherEntity.fromPrisma(teacher, teacher.user, teacher.schedules);
+    return TeacherEntity.fromPrisma(teacher, teacher?.user, teacher?.schedules);
   }
 
   async update(
     id: number,
     updateTeacherDto: UpdateTeacherDto,
   ): Promise<TeacherEntity> {
+    const schedules = updateTeacherDto.schedules.map((schedule) => {
+      delete schedule.teacherId;
+      return schedule;
+    });
+
     const teacher = await this.prismaService.teacher.update({
       where: {
         id,
@@ -128,13 +138,11 @@ export class TeacherRepository {
       data: {
         ...updateTeacherDto,
         schedules: {
-          updateMany: {
-            data: updateTeacherDto.schedules,
-            where: {
-              id: {
-                in: updateTeacherDto.schedules.map((schedule) => schedule.id),
-              },
-            },
+          deleteMany: {
+            teacherId: id,
+          },
+          createMany: {
+            data: schedules,
           },
         },
       },
@@ -144,7 +152,7 @@ export class TeacherRepository {
       },
     });
 
-    return TeacherEntity.fromPrisma(teacher, teacher.user, teacher.schedules);
+    return TeacherEntity.fromPrisma(teacher, teacher?.user, teacher?.schedules);
   }
 
   async remove(id: number): Promise<TeacherEntity> {
@@ -158,6 +166,6 @@ export class TeacherRepository {
       },
     });
 
-    return TeacherEntity.fromPrisma(teacher, teacher.user, teacher.schedules);
+    return TeacherEntity.fromPrisma(teacher, teacher?.user, teacher?.schedules);
   }
 }

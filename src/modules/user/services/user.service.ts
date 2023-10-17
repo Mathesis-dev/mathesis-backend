@@ -21,7 +21,7 @@ export class UserService {
       email: createUserDto.email,
     });
 
-    if (userExists) {
+    if (userExists?.id) {
       throw new BadRequestException('Usuário já existe');
     }
 

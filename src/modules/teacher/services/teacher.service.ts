@@ -18,7 +18,7 @@ export class TeacherService {
       userId: createTeacherDto.userId,
     });
 
-    if (teacherExists) {
+    if (teacherExists?.id) {
       throw new BadRequestException('Professor já é cadastrado na plataforma');
     }
 
