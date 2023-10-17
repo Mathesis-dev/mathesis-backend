@@ -29,7 +29,7 @@ import { Public } from 'src/shared/decorators/public.decorator';
 import { UserSeed } from 'prisma/seed/implementations/user';
 
 @ApiBearerAuth()
-@ApiTags('users')
+@ApiTags('Users')
 @Controller('users')
 export class UserController {
   constructor(private readonly userService: UserService) {}

@@ -21,60 +21,67 @@ model User {
   createdAt DateTime         @default(now()) @map("created_at")
   updatedAt DateTime?        @updatedAt @map("updated_at")
   deletedAt DateTime?        @map("deleted_at")
-  // Teacher   Teacher?
+  teacher   Teacher?
 
   @@map("users")
 }
 
-// enum WeekdayEnum {
-//   SUNDAY
-//   MONDAY
-//   TUESDAY
-//   WEDNESDAY
-//   THURSDAY
-//   FRIDAY
-//   SATURDAY
-// }
+enum WeekdayEnum {
+  SUNDAY
+  MONDAY
+  TUESDAY
+  WEDNESDAY
+  THURSDAY
+  FRIDAY
+  SATURDAY
+}
 
-// enum SubjectEnum {
-//   ARTS
-//   BIOLOGY
-//   SCIENCE
-//   PHYSICAL_EDUCATION
-//   PHYSICS
-//   GEOGRAPHY
-//   HISTORY
-//   MATH
-//   PORTUGUESE
-//   CHEMISTRY
-// }
+enum SubjectEnum {
+  ARTS
+  BIOLOGY
+  SCIENCE
+  PHYSICAL_EDUCATION
+  PHYSICS
+  GEOGRAPHY
+  HISTORY
+  MATH
+  PORTUGUESE
+  CHEMISTRY
+}
 
-// model TeachingSchedules {
-//   id        Int         @id @default(autoincrement())
-//   weekDay   WeekdayEnum @map("week_day")
-//   from      String
-//   to        String
-//   teacherId Int         @map("teacher_id")
-//   Teachers  Teacher     @relation(fields: [teacherId], references: [id])
-//   createdAt DateTime    @default(now()) @map("created_at")
-//   updatedAt DateTime?   @updatedAt @map("updated_at")
-//   deletedAt DateTime?   @map("deleted_at")
+model TeachingSchedules {
+  id            Int         @id @default(autoincrement())
+  subject       SubjectEnum
+  weekDay       WeekdayEnum @map("week_day")
+  from          String
+  to            String
+  cost          Float
+  teacherId     Int         @map("teacher_id")
+  teacher       Teacher     @relation(fields: [teacherId], references: [id])
+  onlineClass   Boolean     @default(true) @map("online_class")
+  inPersonClass Boolean     @default(true) @map("in_person_class")
+  createdAt     DateTime    @default(now()) @map("created_at")
+  updatedAt     DateTime?   @updatedAt @map("updated_at")
+  deletedAt     DateTime?   @map("deleted_at")
 
-//   @@map("teaching_schedules")
-// }
+  @@map("teaching_schedules")
+}
 
-// model Teacher {
-//   id        Int                 @id @default(autoincrement())
-//   phone     String
-//   biography String
-//   subject   SubjectEnum
-//   cost      Float
-//   schedules TeachingSchedules[]
-//   userId    Int                 @unique @map("user_id")
-//   user      User                @relation(fields: [userId], references: [id])
-//   createdAt DateTime            @default(now()) @map("created_at")
-//   updatedAt DateTime?           @updatedAt @map("updated_at")
-//   deletedAt DateTime?           @map("deleted_at")
+model Teacher {
+  id            Int                 @id @default(autoincrement())
+  phone         String
+  biography     String
+  schedules     TeachingSchedules[]
+  userId        Int                 @unique @map("user_id")
+  user          User                @relation(fields: [userId], references: [id])
+  city          String
+  state         String
+  badReviews    Int                 @default(0) @map("bad_reviews")
+  mediumReviews Int                 @default(0) @map("medium_reviews")
+  goodReviews   Int                 @default(0) @map("good_reviews")
+  createdAt     DateTime            @default(now()) @map("created_at")
+  updatedAt     DateTime?           @updatedAt @map("updated_at")
+  deletedAt     DateTime?           @map("deleted_at")
 
-//   @@map("teachers")
-// }
+  @@map("teachers")
+}

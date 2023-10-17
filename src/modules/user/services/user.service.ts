@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 
 import { UserRepository } from '../infra/repositories/user.repository';
 
@@ -21,8 +21,8 @@ export class UserService {
       email: createUserDto.email,
     });
 
-    if (userExists) {
-      throw new Error('Usuário já existe');
+    if (userExists?.id) {
+      throw new BadRequestException('Usuário já existe');
     }
 
     return await this.userRepository.create({
@@ -54,7 +54,7 @@ export class UserService {
     });
 
     if (!userExists) {
-      throw new Error('Usuário não existe');
+      throw new BadRequestException('Usuário não existe');
     }
 
     return await this.userRepository.update(id, updateUserDto);
@@ -66,7 +66,7 @@ export class UserService {
     });
 
     if (!userExists) {
-      throw new Error('Usuário não existe');
+      throw new BadRequestException('Usuário não existe');
     }
 
     return await this.userRepository.remove(id);
