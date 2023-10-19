@@ -1,12 +1,11 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
-import { SubjectEnum, WeekdayEnum } from '@prisma/client';
+import { SubjectEnum } from '@prisma/client';
 import {
   IsBoolean,
   IsEnum,
   IsNotEmpty,
   IsNumber,
   IsOptional,
-  IsString,
 } from 'class-validator';
 
 export class CreateScheduleDto {
@@ -29,31 +28,6 @@ export class CreateScheduleDto {
   @IsEnum(SubjectEnum, { message: 'Matéria inválida' })
   @IsNotEmpty({ message: 'Matéria é obrigatória' })
   subject: SubjectEnum;
-
-  @ApiProperty({
-    description: 'Dia que será dada a matéria (em inglês)',
-    example: WeekdayEnum.MONDAY,
-    enum: WeekdayEnum,
-  })
-  @IsEnum(WeekdayEnum, { message: 'Dia da matéria inválida' })
-  @IsNotEmpty({ message: 'Dia da matéria é obrigatória' })
-  weekDay: WeekdayEnum;
-
-  @ApiProperty({
-    description: 'Horário que será dada a matéria',
-    example: '08:00',
-  })
-  @IsString({ message: 'Horário em formato inválido' })
-  @IsNotEmpty({ message: 'Horário é obrigatório' })
-  from: string;
-
-  @ApiProperty({
-    description: 'Horário final que será dada a matéria',
-    example: '12:00',
-  })
-  @IsString({ message: 'Horário final em formato inválido' })
-  @IsNotEmpty({ message: 'Horário final é obrigatório' })
-  to: string;
 
   @ApiProperty({
     description: 'Valor da aula',

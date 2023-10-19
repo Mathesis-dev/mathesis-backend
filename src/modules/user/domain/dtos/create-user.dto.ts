@@ -7,6 +7,7 @@ import {
   IsStrongPassword,
 } from 'class-validator';
 import { UserCategoryEnum } from '../enums/user-category.enum';
+import { UserGenderEnum } from '../enums/user-gender.enum';
 
 export class CreateUserDto {
   @ApiProperty({
@@ -49,4 +50,13 @@ export class CreateUserDto {
   @IsEnum(UserCategoryEnum, { message: 'Categoria inválida' })
   @IsNotEmpty({ message: 'Categoria é obrigatório' })
   category: UserCategoryEnum;
+
+  @ApiProperty({
+    enum: UserGenderEnum,
+    description: 'Gênero do usuário',
+    example: UserGenderEnum.Male,
+  })
+  @IsEnum(UserGenderEnum, { message: 'Gênero inválido' })
+  @IsNotEmpty({ message: 'Gênero é obrigatório' })
+  gender: UserGenderEnum;
 }

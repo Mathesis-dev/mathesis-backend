@@ -1,4 +1,5 @@
 import { User } from '@prisma/client';
+import { UserGenderEnum } from '../enums/user-gender.enum';
 
 export default class UserEntity {
   readonly id: number;
@@ -6,6 +7,7 @@ export default class UserEntity {
   readonly email: string;
   readonly password: string;
   readonly category: string;
+  readonly gender: UserGenderEnum;
   readonly createdAt: Date;
   readonly updatedAt: Date;
   readonly deletedAt: Date | null;
@@ -16,6 +18,7 @@ export default class UserEntity {
     email,
     password,
     category,
+    gender,
     createdAt,
     updatedAt,
     deletedAt,
@@ -25,6 +28,7 @@ export default class UserEntity {
     email: string;
     password: string;
     category: string;
+    gender: UserGenderEnum;
     createdAt: Date;
     updatedAt: Date;
     deletedAt: Date | null;
@@ -34,6 +38,7 @@ export default class UserEntity {
     this.email = email;
     this.password = password;
     this.category = category;
+    this.gender = gender;
     this.createdAt = createdAt;
     this.updatedAt = updatedAt;
     this.deletedAt = deletedAt;
@@ -48,6 +53,7 @@ export default class UserEntity {
       email: user.email,
       password: user.password,
       category: user.category,
+      gender: user.gender,
       createdAt: user.createdAt,
       updatedAt: user.updatedAt,
       deletedAt: user.deletedAt,

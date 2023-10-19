@@ -1,17 +1,9 @@
-import {
-  SubjectEnum,
-  Teacher,
-  TeachingSchedules,
-  WeekdayEnum,
-} from '@prisma/client';
+import { SubjectEnum, Teacher, TeachingSchedules } from '@prisma/client';
 import TeacherEntity from 'src/modules/teacher/domain/entities/teacher.entity';
 
 export default class ScheduleEntity {
   readonly id: number;
   readonly subject: SubjectEnum;
-  readonly weekDay: WeekdayEnum;
-  readonly from: string;
-  readonly to: string;
   readonly cost: number;
   readonly teacherId: number;
   readonly teacher: TeacherEntity;
@@ -24,9 +16,6 @@ export default class ScheduleEntity {
   constructor({
     id,
     subject,
-    weekDay,
-    from,
-    to,
     cost,
     teacherId,
     teacher,
@@ -38,9 +27,6 @@ export default class ScheduleEntity {
   }: {
     id: number;
     subject: SubjectEnum;
-    weekDay: WeekdayEnum;
-    from: string;
-    to: string;
     cost: number;
     teacherId: number;
     teacher: TeacherEntity;
@@ -52,9 +38,6 @@ export default class ScheduleEntity {
   }) {
     this.id = id;
     this.subject = subject;
-    this.weekDay = weekDay;
-    this.from = from;
-    this.to = to;
     this.cost = cost;
     this.teacherId = teacherId;
     this.teacher = teacher;
@@ -74,9 +57,6 @@ export default class ScheduleEntity {
     return new ScheduleEntity({
       id: schedule.id,
       subject: schedule.subject,
-      weekDay: schedule.weekDay,
-      from: schedule.from,
-      to: schedule.to,
       cost: schedule.cost,
       teacherId: schedule.teacherId,
       teacher: TeacherEntity.fromPrisma(teacher, null, null),
