@@ -15,8 +15,6 @@ export class ScheduleService {
 
   async create(createScheduleDto: CreateScheduleDto): Promise<ScheduleEntity> {
     const scheduleExists = await this.scheduleRepository.findOneBy({
-      from: createScheduleDto.from,
-      to: createScheduleDto.to,
       subject: createScheduleDto.subject,
       teacherId: createScheduleDto.teacherId,
     });

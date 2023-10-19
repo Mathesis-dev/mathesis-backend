@@ -12,28 +12,24 @@ enum UserCategoryEnum {
   STUDENT
 }
 
+enum GenderEnum {
+  MALE
+  FEMALE
+}
+
 model User {
   id        Int              @id @default(autoincrement())
   name      String
   email     String           @unique
   password  String
   category  UserCategoryEnum
+  gender    GenderEnum
   createdAt DateTime         @default(now()) @map("created_at")
   updatedAt DateTime?        @updatedAt @map("updated_at")
   deletedAt DateTime?        @map("deleted_at")
   teacher   Teacher?
 
   @@map("users")
-}
-
-enum WeekdayEnum {
-  SUNDAY
-  MONDAY
-  TUESDAY
-  WEDNESDAY
-  THURSDAY
-  FRIDAY
-  SATURDAY
 }
 
 enum SubjectEnum {
@@ -52,9 +48,6 @@ enum SubjectEnum {
 model TeachingSchedules {
   id            Int         @id @default(autoincrement())
   subject       SubjectEnum
-  weekDay       WeekdayEnum @map("week_day")
-  from          String
-  to            String
   cost          Float
   teacherId     Int         @map("teacher_id")
   teacher       Teacher     @relation(fields: [teacherId], references: [id])
