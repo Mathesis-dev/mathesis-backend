@@ -62,7 +62,11 @@ export class ScheduleController {
     status: HttpStatus.OK,
     description: 'Cronogramas encontrados com sucesso',
     schema: {
-      example: new ScheduleSeed().sampleGenerator(),
+      example: {
+        data: [new ScheduleSeed().sampleGenerator()],
+        total: 1,
+        pages: 0,
+      },
     },
   })
   @Get('/teacher/:id')
@@ -97,6 +101,9 @@ export class ScheduleController {
   @ApiResponse({
     status: HttpStatus.OK,
     description: 'Cronograma atualizado com sucesso',
+    schema: {
+      example: new ScheduleSeed().sampleGenerator(),
+    },
   })
   @Patch(':id')
   update(
@@ -113,6 +120,9 @@ export class ScheduleController {
   @ApiResponse({
     status: HttpStatus.OK,
     description: 'Cronograma de aula removido com sucesso',
+    schema: {
+      example: new ScheduleSeed().sampleGenerator(new Date()),
+    },
   })
   @Delete(':id')
   remove(@Param('id') id: number): Promise<ScheduleEntity> {

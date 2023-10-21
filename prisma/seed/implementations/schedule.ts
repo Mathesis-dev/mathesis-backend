@@ -18,7 +18,7 @@ export class ScheduleSeed extends BaseSeed {
     super(SCHEDULES, 'teachingSchedules');
   }
 
-  sampleGenerator = (): TeachingSchedules => {
+  sampleGenerator = (deletedAt?: Date): TeachingSchedules => {
     const onlineClass = faker.datatype.boolean();
     const inPersonClass = onlineClass ? false : faker.datatype.boolean();
 
@@ -31,7 +31,7 @@ export class ScheduleSeed extends BaseSeed {
       inPersonClass,
       createdAt: faker.date.past(),
       updatedAt: faker.date.past(),
-      deletedAt: null,
+      deletedAt: deletedAt ?? null,
     };
   };
 }
