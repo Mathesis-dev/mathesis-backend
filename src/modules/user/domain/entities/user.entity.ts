@@ -21,17 +21,7 @@ export default class UserEntity {
     createdAt,
     updatedAt,
     deletedAt,
-  }: {
-    id: number;
-    name: string;
-    email: string;
-    password: string;
-    category: string;
-    gender: GenderEnum;
-    createdAt: Date;
-    updatedAt: Date;
-    deletedAt: Date | null;
-  }) {
+  }: UserEntity) {
     this.id = id;
     this.name = name;
     this.email = email;
@@ -47,15 +37,7 @@ export default class UserEntity {
     if (!user) return null;
 
     return new UserEntity({
-      id: user.id,
-      name: user.name,
-      email: user.email,
-      password: user.password,
-      category: user.category,
-      gender: user.gender,
-      createdAt: user.createdAt,
-      updatedAt: user.updatedAt,
-      deletedAt: user.deletedAt,
+      ...user,
     });
   }
 }

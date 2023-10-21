@@ -33,22 +33,7 @@ export default class TeacherEntity {
     createdAt,
     updatedAt,
     deletedAt,
-  }: {
-    id: number;
-    phone: string;
-    biography: string;
-    schedules: Array<ScheduleEntity>;
-    userId: number;
-    user: UserEntity;
-    city: string;
-    state: string;
-    badReviews: number;
-    mediumReviews: number;
-    goodReviews: number;
-    createdAt: Date;
-    updatedAt: Date;
-    deletedAt: Date | null;
-  }) {
+  }: TeacherEntity) {
     this.id = id;
     this.phone = phone;
     this.biography = biography;
@@ -73,24 +58,13 @@ export default class TeacherEntity {
     if (!teacher) return null;
 
     return new TeacherEntity({
-      id: teacher.id,
-      phone: teacher.phone,
-      biography: teacher.biography,
+      ...teacher,
       schedules: schedules
         ? schedules.map((schedule) =>
             ScheduleEntity.fromPrisma(schedule, teacher),
           )
         : [],
-      userId: teacher.userId,
       user: UserEntity.fromPrisma(user),
-      city: teacher.city,
-      state: teacher.state,
-      badReviews: teacher.badReviews,
-      mediumReviews: teacher.mediumReviews,
-      goodReviews: teacher.goodReviews,
-      createdAt: teacher.createdAt,
-      updatedAt: teacher.updatedAt,
-      deletedAt: teacher.deletedAt,
     });
   }
 }

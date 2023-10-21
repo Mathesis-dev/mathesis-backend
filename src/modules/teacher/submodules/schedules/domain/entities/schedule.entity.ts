@@ -24,18 +24,7 @@ export default class ScheduleEntity {
     createdAt,
     updatedAt,
     deletedAt,
-  }: {
-    id: number;
-    subject: SubjectEnum;
-    cost: number;
-    teacherId: number;
-    teacher: TeacherEntity;
-    onlineClass: boolean;
-    inPersonClass: boolean;
-    createdAt: Date;
-    updatedAt: Date;
-    deletedAt: Date | null;
-  }) {
+  }: ScheduleEntity) {
     this.id = id;
     this.subject = subject;
     this.cost = cost;
@@ -55,16 +44,8 @@ export default class ScheduleEntity {
     if (!schedule || !teacher) return null;
 
     return new ScheduleEntity({
-      id: schedule.id,
-      subject: schedule.subject,
-      cost: schedule.cost,
-      teacherId: schedule.teacherId,
+      ...schedule,
       teacher: TeacherEntity.fromPrisma(teacher, null, null),
-      onlineClass: schedule.onlineClass,
-      inPersonClass: schedule.inPersonClass,
-      createdAt: schedule.createdAt,
-      updatedAt: schedule.updatedAt,
-      deletedAt: schedule.deletedAt,
     });
   }
 }
