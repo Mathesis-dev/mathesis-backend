@@ -7,6 +7,7 @@ import { UserModule } from 'src/modules/user/user.module';
 import { ConfigModule } from './config/config.module';
 import { TeacherModule } from 'src/modules/teacher/teacher.module';
 import { SchedulesModule } from 'src/modules/teacher/submodules/schedules/schedules.module';
+import { StudentModule } from 'src/modules/student/student.module';
 
 @Module({
   imports: [
@@ -16,6 +17,7 @@ import { SchedulesModule } from 'src/modules/teacher/submodules/schedules/schedu
     AuthModule,
     TeacherModule,
     SchedulesModule,
+    StudentModule,
   ],
   controllers: [],
   providers: [
