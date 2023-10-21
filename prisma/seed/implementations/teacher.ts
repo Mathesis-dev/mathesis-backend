@@ -22,7 +22,7 @@ export class TeacherSeed extends BaseSeed {
     super(TEACHERS, 'teacher');
   }
 
-  sampleGenerator = (): Teacher => {
+  sampleGenerator = (deletedAt?: Date): Teacher => {
     return {
       id: faker.number.int(),
       phone: '+55 (48) 99999-9999',
@@ -35,7 +35,7 @@ export class TeacherSeed extends BaseSeed {
       goodReviews: faker.number.int(),
       createdAt: faker.date.past(),
       updatedAt: faker.date.past(),
-      deletedAt: null,
+      deletedAt: deletedAt ?? null,
     };
   };
 }
