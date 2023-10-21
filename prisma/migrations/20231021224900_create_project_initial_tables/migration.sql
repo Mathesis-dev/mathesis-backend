@@ -1,17 +1,26 @@
-/*
-  Warnings:
+-- CreateEnum
+CREATE TYPE "UserCategoryEnum" AS ENUM ('TEACHER', 'STUDENT');
 
-  - Added the required column `gender` to the `users` table without a default value. This is not possible if the table is not empty.
-
-*/
 -- CreateEnum
 CREATE TYPE "GenderEnum" AS ENUM ('MALE', 'FEMALE');
 
 -- CreateEnum
 CREATE TYPE "SubjectEnum" AS ENUM ('ARTS', 'BIOLOGY', 'SCIENCE', 'PHYSICAL_EDUCATION', 'PHYSICS', 'GEOGRAPHY', 'HISTORY', 'MATH', 'PORTUGUESE', 'CHEMISTRY');
 
--- AlterTable
-ALTER TABLE "users" ADD COLUMN     "gender" "GenderEnum" NOT NULL;
+-- CreateTable
+CREATE TABLE "users" (
+    "id" SERIAL NOT NULL,
+    "name" TEXT NOT NULL,
+    "email" TEXT NOT NULL,
+    "password" TEXT NOT NULL,
+    "category" "UserCategoryEnum" NOT NULL,
+    "gender" "GenderEnum" NOT NULL,
+    "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updated_at" TIMESTAMP(3),
+    "deleted_at" TIMESTAMP(3),
+
+    CONSTRAINT "users_pkey" PRIMARY KEY ("id")
+);
 
 -- CreateTable
 CREATE TABLE "teaching_schedules" (
@@ -62,6 +71,9 @@ CREATE TABLE "_favorite_teachers" (
     "A" INTEGER NOT NULL,
     "B" INTEGER NOT NULL
 );
+
+-- CreateIndex
+CREATE UNIQUE INDEX "users_email_key" ON "users"("email");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "teachers_user_id_key" ON "teachers"("user_id");
