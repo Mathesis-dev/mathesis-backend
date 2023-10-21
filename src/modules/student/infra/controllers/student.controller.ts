@@ -1,32 +1,29 @@
 import {
-  ApiTags,
+  Body,
+  Controller,
+  Delete,
+  Get,
+  HttpStatus,
+  Param,
+  Patch,
+  Post,
+} from '@nestjs/common';
+import {
+  ApiBearerAuth,
   ApiOperation,
   ApiResponse,
-  ApiBearerAuth,
+  ApiTags,
 } from '@nestjs/swagger';
-import {
-  Controller,
-  Get,
-  Post,
-  Body,
-  Patch,
-  Param,
-  Delete,
-  HttpStatus,
-  Query,
-} from '@nestjs/common';
 
-import { ListStudentParamsDto } from '../../domain/dtos/list-student-params.dto';
 import { CreateStudentDto } from '../../domain/dtos/create-student.dto';
 import { UpdateStudentDto } from '../../domain/dtos/update-student.dto';
-import { FindAllResponseDto } from 'src/shared/dtos/find-all-response.dto';
 
 import { StudentService } from '../../services/student.service';
 
 import StudentEntity from '../../domain/entities/student.entity';
 
-import { Public } from 'src/shared/decorators/public.decorator';
 import { StudentSeed } from 'prisma/seed/implementations/student';
+import { Public } from 'src/shared/decorators/public.decorator';
 
 @ApiBearerAuth()
 @ApiTags('Students')
@@ -49,24 +46,6 @@ export class StudentController {
   @Post()
   create(@Body() createStudentDto: CreateStudentDto): Promise<StudentEntity> {
     return this.studentService.create(createStudentDto);
-  }
-
-  @ApiOperation({
-    summary: 'Listar os estudantes da plataforma',
-    description: 'Lista os estudantes da plataforma e suas informações',
-  })
-  @ApiResponse({
-    status: HttpStatus.OK,
-    description: 'Estudantes encontrados com sucesso',
-    schema: {
-      example: new StudentSeed().sampleGenerator(),
-    },
-  })
-  @Get()
-  findAll(
-    @Query() params: ListStudentParamsDto,
-  ): Promise<FindAllResponseDto<Array<StudentEntity>>> {
-    return this.studentService.findAll(params);
   }
 
   @ApiOperation({

@@ -4,9 +4,7 @@ import { Student } from '@prisma/client';
 import { PrismaService } from 'src/database/prisma/prisma.service';
 import StudentEntity from '../../domain/entities/student.entity';
 
-import { FindAllResponseDto } from 'src/shared/dtos/find-all-response.dto';
 import { CreateStudentDto } from '../../domain/dtos/create-student.dto';
-import { ListStudentParamsDto } from '../../domain/dtos/list-student-params.dto';
 import { UpdateStudentDto } from '../../domain/dtos/update-student.dto';
 
 @Injectable()
@@ -15,47 +13,19 @@ export class StudentRepository {
 
   async create(createStudentDto: CreateStudentDto): Promise<StudentEntity> {
     const student = await this.prismaService.student.create({
-      data: createStudentDto,
+      data: {
+        ...createStudentDto,
+        favoriteTeachers: {
+          connect: createStudentDto.favoriteTeachers,
+        },
+      },
+      include: {
+        user: true,
+        favoriteTeachers: true,
+      },
     });
 
-    return StudentEntity.fromPrisma({ ...student, password: undefined });
-  }
-
-  async findAll(
-    params: ListStudentParamsDto,
-  ): Promise<FindAllResponseDto<Array<StudentEntity>>> {
-    const skip = params.skip ? +params.skip : undefined;
-    const take = params.take ? +params.take : undefined;
-    const orderBy = params.orderBy ?? 'id';
-    const ordering = params.ordering ?? 'desc';
-
-    const [total, prismaStudents] = await this.prismaService.$transaction([
-      this.prismaService.student.count({
-        where: {
-          name: { contains: params.search, mode: 'insensitive' },
-        },
-      }),
-      this.prismaService.student.findMany({
-        skip: skip,
-        take: take,
-        where: {
-          name: { contains: params.search, mode: 'insensitive' },
-        },
-        orderBy: {
-          [orderBy]: ordering,
-        },
-      }),
-    ]);
-
-    const students = prismaStudents.map((student) =>
-      StudentEntity.fromPrisma({ ...student, password: undefined }),
-    );
-
-    return {
-      data: students,
-      total: total,
-      pages: take ? Math.round(total / take) : 0,
-    };
+    return StudentEntity.fromPrisma(student);
   }
 
   async findOne(id: number): Promise<StudentEntity> {
@@ -63,21 +33,25 @@ export class StudentRepository {
       where: {
         id,
       },
+      include: {
+        user: true,
+        favoriteTeachers: true,
+      },
     });
 
-    return StudentEntity.fromPrisma({ ...student, password: undefined });
+    return StudentEntity.fromPrisma(student);
   }
 
-  async findOneBy(
-    where: Partial<Student>,
-    removePassword = true,
-  ): Promise<StudentEntity> {
-    const student = await this.prismaService.student.findUnique({ where });
-
-    return StudentEntity.fromPrisma({
-      ...student,
-      password: removePassword ? undefined : student.password,
+  async findOneBy(where: Partial<Student>): Promise<StudentEntity> {
+    const student = await this.prismaService.student.findUnique({
+      where,
+      include: {
+        user: true,
+        favoriteTeachers: true,
+      },
     });
+
+    return StudentEntity.fromPrisma(student);
   }
 
   async update(
@@ -88,10 +62,19 @@ export class StudentRepository {
       where: {
         id,
       },
-      data: updateStudentDto,
+      data: {
+        ...updateStudentDto,
+        favoriteTeachers: {
+          connect: updateStudentDto.favoriteTeachers,
+        },
+      },
+      include: {
+        user: true,
+        favoriteTeachers: true,
+      },
     });
 
-    return StudentEntity.fromPrisma({ ...student, password: undefined });
+    return StudentEntity.fromPrisma(student);
   }
 
   async remove(id: number): Promise<StudentEntity> {
@@ -99,8 +82,12 @@ export class StudentRepository {
       where: {
         id,
       },
+      include: {
+        user: true,
+        favoriteTeachers: true,
+      },
     });
 
-    return StudentEntity.fromPrisma({ ...student, password: undefined });
+    return StudentEntity.fromPrisma(student);
   }
 }
