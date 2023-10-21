@@ -17,6 +17,7 @@ export class ScheduleService {
     const scheduleExists = await this.scheduleRepository.findOneBy({
       subject: createScheduleDto.subject,
       teacherId: createScheduleDto.teacherId,
+      deletedAt: null,
     });
 
     if (scheduleExists?.id) {
@@ -49,9 +50,10 @@ export class ScheduleService {
   ): Promise<ScheduleEntity> {
     const scheduleExists = await this.scheduleRepository.findOneBy({
       id,
+      deletedAt: null,
     });
 
-    if (!scheduleExists) {
+    if (!scheduleExists?.id) {
       throw new BadRequestException('Esse cronograma/aula não existe');
     }
 
@@ -61,9 +63,10 @@ export class ScheduleService {
   async remove(id: number): Promise<ScheduleEntity> {
     const scheduleExists = await this.scheduleRepository.findOneBy({
       id,
+      deletedAt: null,
     });
 
-    if (!scheduleExists) {
+    if (!scheduleExists?.id) {
       throw new BadRequestException('Esse cronograma/aula não existe');
     }
 

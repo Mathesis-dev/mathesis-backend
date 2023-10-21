@@ -16,6 +16,7 @@ export class TeacherService {
   async create(createTeacherDto: CreateTeacherDto): Promise<TeacherEntity> {
     const teacherExists = await this.teacherRepository.findOneBy({
       userId: createTeacherDto.userId,
+      deletedAt: null,
     });
 
     if (teacherExists?.id) {
@@ -45,9 +46,10 @@ export class TeacherService {
   ): Promise<TeacherEntity> {
     const teacherExists = await this.teacherRepository.findOneBy({
       id,
+      deletedAt: null,
     });
 
-    if (!teacherExists) {
+    if (!teacherExists?.id) {
       throw new BadRequestException('Esse professor não existe');
     }
 
@@ -57,9 +59,10 @@ export class TeacherService {
   async remove(id: number): Promise<TeacherEntity> {
     const teacherExists = await this.teacherRepository.findOneBy({
       id,
+      deletedAt: null,
     });
 
-    if (!teacherExists) {
+    if (!teacherExists?.id) {
       throw new BadRequestException('Esse professor não existe');
     }
 

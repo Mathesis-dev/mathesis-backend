@@ -19,6 +19,7 @@ export class UserService {
   async create(createUserDto: CreateUserDto): Promise<UserEntity> {
     const userExists = await this.userRepository.findOneBy({
       email: createUserDto.email,
+      deletedAt: null,
     });
 
     if (userExists?.id) {
@@ -51,9 +52,10 @@ export class UserService {
   async update(id: number, updateUserDto: UpdateUserDto): Promise<UserEntity> {
     const userExists = await this.userRepository.findOneBy({
       id,
+      deletedAt: null,
     });
 
-    if (!userExists) {
+    if (!userExists?.id) {
       throw new BadRequestException('Usuário não existe');
     }
 
@@ -63,9 +65,10 @@ export class UserService {
   async remove(id: number): Promise<UserEntity> {
     const userExists = await this.userRepository.findOneBy({
       id,
+      deletedAt: null,
     });
 
-    if (!userExists) {
+    if (!userExists?.id) {
       throw new BadRequestException('Usuário não existe');
     }
 
