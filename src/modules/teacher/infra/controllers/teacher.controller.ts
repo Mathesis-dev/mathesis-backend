@@ -47,7 +47,6 @@ export class TeacherController {
       example: new TeacherSeed().sampleGenerator(),
     },
   })
-  @Public()
   @Post()
   create(@Body() createTeacherDto: CreateTeacherDto): Promise<TeacherEntity> {
     return this.teacherService.create(createTeacherDto);

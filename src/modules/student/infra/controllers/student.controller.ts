@@ -42,7 +42,6 @@ export class StudentController {
       example: new StudentSeed().sampleGenerator(),
     },
   })
-  @Public()
   @Post()
   create(@Body() createStudentDto: CreateStudentDto): Promise<StudentEntity> {
     return this.studentService.create(createStudentDto);

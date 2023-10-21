@@ -47,7 +47,6 @@ export class ScheduleController {
       example: new ScheduleSeed().sampleGenerator(),
     },
   })
-  @Public()
   @Post()
   create(
     @Body() createScheduleDto: CreateScheduleDto,
