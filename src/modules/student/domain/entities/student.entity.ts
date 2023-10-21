@@ -1,39 +1,35 @@
-import { Student } from '@prisma/client';
+import { Prisma } from '@prisma/client';
+import TeacherEntity from 'src/modules/teacher/domain/entities/teacher.entity';
+import UserEntity from 'src/modules/user/domain/entities/user.entity';
+
+const studentWithRelations = Prisma.validator<Prisma.StudentArgs>()({
+  include: { favoriteTeachers: true, user: true },
+});
+
+type Student = Prisma.StudentGetPayload<typeof studentWithRelations>;
 
 export default class StudentEntity {
   readonly id: number;
-  readonly name: string;
-  readonly email: string;
-  readonly password: string;
-  readonly category: string;
+  readonly userId: number;
+  readonly user: UserEntity;
+  readonly favoriteTeachers: Array<TeacherEntity>;
   readonly createdAt: Date;
   readonly updatedAt: Date;
   readonly deletedAt: Date | null;
 
   constructor({
     id,
-    name,
-    email,
-    password,
-    category,
+    userId,
+    user,
+    favoriteTeachers,
     createdAt,
     updatedAt,
     deletedAt,
-  }: {
-    id: number;
-    name: string;
-    email: string;
-    password: string;
-    category: string;
-    createdAt: Date;
-    updatedAt: Date;
-    deletedAt: Date | null;
-  }) {
+  }: StudentEntity) {
     this.id = id;
-    this.name = name;
-    this.email = email;
-    this.password = password;
-    this.category = category;
+    this.userId = userId;
+    this.user = user;
+    this.favoriteTeachers = favoriteTeachers;
     this.createdAt = createdAt;
     this.updatedAt = updatedAt;
     this.deletedAt = deletedAt;
@@ -43,14 +39,11 @@ export default class StudentEntity {
     if (!student) return null;
 
     return new StudentEntity({
-      id: student.id,
-      name: student.name,
-      email: student.email,
-      password: student.password,
-      category: student.category,
-      createdAt: student.createdAt,
-      updatedAt: student.updatedAt,
-      deletedAt: student.deletedAt,
+      ...student,
+      user: UserEntity.fromPrisma(student.user),
+      favoriteTeachers: student.favoriteTeachers.map((teacher) =>
+        TeacherEntity.fromPrisma(teacher),
+      ),
     });
   }
 }

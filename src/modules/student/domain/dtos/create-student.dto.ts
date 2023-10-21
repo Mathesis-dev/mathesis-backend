@@ -1,62 +1,27 @@
-import { ApiProperty } from '@nestjs/swagger';
-import {
-  IsEmail,
-  IsEnum,
-  IsNotEmpty,
-  IsString,
-  IsStrongPassword,
-} from 'class-validator';
-import { UserCategoryEnum } from '../enums/user-category.enum';
-import { UserGenderEnum } from '../enums/user-gender.enum';
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
+import { Type } from 'class-transformer';
+import { IsNotEmpty, IsNumber, ValidateNested } from 'class-validator';
+import TeacherEntity from 'src/modules/teacher/domain/entities/teacher.entity';
 
 export class CreateStudentDto {
   @ApiProperty({
-    description: 'Nome completo do usuário',
-    example: 'Fulano da Silva',
+    description: 'ID do usuário relacionado',
+    example: 1,
   })
-  @IsString({ message: 'Nome completo inválido' })
-  @IsNotEmpty({ message: 'Nome completo é obrigatório' })
-  name: string;
-
-  @ApiProperty({
-    description: 'Email do usuário',
-    example: 'fulano@gmail.com',
-  })
-  @IsString({ message: 'Email inválido' })
-  @IsEmail({}, { message: 'Email inválido' })
-  @IsNotEmpty({ message: 'Email é obrigatório' })
-  email: string;
-
-  @ApiProperty({ description: 'Senha do usuário', example: 'Teste1@' })
-  @IsString({ message: 'Senha inválida' })
-  @IsNotEmpty({ message: 'Senha é obrigatório' })
-  @IsStrongPassword(
-    {
-      minLength: 6,
-      minLowercase: 1,
-      minNumbers: 1,
-      minSymbols: 1,
-      minUppercase: 1,
-    },
-    { message: 'A senha é fraca demais' },
+  @IsNumber(
+    { allowInfinity: false, allowNaN: false, maxDecimalPlaces: 0 },
+    { message: 'ID do usuário inválido' },
   )
-  password: string;
+  @IsNotEmpty({ message: 'ID do usuário é obrigatório' })
+  userId: number;
 
-  @ApiProperty({
-    enum: UserCategoryEnum,
-    description: 'Categoria do usuário',
-    example: UserCategoryEnum.Teacher,
+  // TODO - validar como funciona no DTO para o favoriteTeachers
+  @ApiPropertyOptional({
+    description: 'Professores favoritados pelo aluno',
+    type: TeacherEntity,
+    isArray: true,
   })
-  @IsEnum(UserCategoryEnum, { message: 'Categoria inválida' })
-  @IsNotEmpty({ message: 'Categoria é obrigatório' })
-  category: UserCategoryEnum;
-
-  @ApiProperty({
-    enum: UserGenderEnum,
-    description: 'Gênero do usuário',
-    example: UserGenderEnum.Male,
-  })
-  @IsEnum(UserGenderEnum, { message: 'Gênero inválido' })
-  @IsNotEmpty({ message: 'Gênero é obrigatório' })
-  gender: UserGenderEnum;
+  @ValidateNested({ each: true })
+  @Type(() => TeacherEntity)
+  favoriteTeachers?: Array<TeacherEntity>;
 }
