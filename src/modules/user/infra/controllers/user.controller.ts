@@ -59,7 +59,11 @@ export class UserController {
     status: HttpStatus.OK,
     description: 'Usuários encontrados com sucesso',
     schema: {
-      example: new UserSeed().sampleGenerator(),
+      example: {
+        data: [new UserSeed().sampleGenerator()],
+        total: 1,
+        pages: 0,
+      },
     },
   })
   @Get()
@@ -92,6 +96,9 @@ export class UserController {
   @ApiResponse({
     status: HttpStatus.OK,
     description: 'Usuário atualizado com sucesso',
+    schema: {
+      example: new UserSeed().sampleGenerator(),
+    },
   })
   @Patch(':id')
   update(
@@ -108,6 +115,9 @@ export class UserController {
   @ApiResponse({
     status: HttpStatus.OK,
     description: 'Usuário removido com sucesso',
+    schema: {
+      example: new UserSeed().sampleGenerator(new Date()),
+    },
   })
   @Delete(':id')
   remove(@Param('id') id: number): Promise<UserEntity> {
