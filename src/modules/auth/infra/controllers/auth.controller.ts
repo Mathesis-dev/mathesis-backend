@@ -20,6 +20,20 @@ export class AuthController {
   @ApiOperation({
     summary: 'Loga o usuário na plataforma',
     description: 'Loga o usuário na plataforma',
+    requestBody: {
+      required: true,
+      content: {
+        'application/json': {
+          schema: {
+            type: 'object',
+            example: {
+              email: 'fulano@gmail.com',
+              password: 'Teste1@',
+            },
+          },
+        },
+      },
+    },
   })
   @ApiResponse({
     status: HttpStatus.OK,
