@@ -20,8 +20,6 @@ import { FindAllResponseDto } from 'src/shared/dtos/find-all-response.dto';
 
 import { ScheduleSeed } from 'prisma/seed/implementations/schedule';
 
-import { Public } from 'src/shared/decorators/public.decorator';
-
 import { CreateScheduleDto } from '../../domain/dtos/create-schedule.dto';
 import { ListScheduleParamsDto } from '../../domain/dtos/list-schedule-params.dto';
 import { UpdateScheduleDto } from '../../domain/dtos/update-schedule.dto';

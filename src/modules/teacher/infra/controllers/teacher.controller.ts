@@ -20,8 +20,6 @@ import { FindAllResponseDto } from 'src/shared/dtos/find-all-response.dto';
 
 import { TeacherSeed } from 'prisma/seed/implementations/teacher';
 
-import { Public } from 'src/shared/decorators/public.decorator';
-
 import { CreateTeacherDto } from '../../domain/dtos/create-teacher.dto';
 import { ListTeacherParamsDto } from '../../domain/dtos/list-teacher-params.dto';
 import { UpdateTeacherDto } from '../../domain/dtos/update-teacher.dto';
