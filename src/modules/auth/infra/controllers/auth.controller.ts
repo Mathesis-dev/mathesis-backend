@@ -29,22 +29,6 @@ export class AuthController {
       example: {
         access_token:
           'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c',
-        expires_in: '2h',
-        user: {
-          id: 1,
-          email: 'fulanodasilva@gmail.com',
-        },
-        properties: {
-          access_token: {
-            type: 'string',
-          },
-          expires_in: {
-            type: 'string',
-          },
-          user: {
-            type: 'object',
-          },
-        },
       },
     },
   })
