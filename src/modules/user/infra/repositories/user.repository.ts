@@ -14,7 +14,10 @@ export class UserRepository {
   constructor(private readonly prismaService: PrismaService) {}
 
   async create(createUserDto: CreateUserDto): Promise<UserEntity> {
-    const user = await this.prismaService.user.create({ data: createUserDto });
+    const user = await this.prismaService.user.create({
+      data: createUserDto,
+      include: { student: true, teacher: true },
+    });
 
     return UserEntity.fromPrisma({ ...user, password: undefined });
   }
@@ -42,6 +45,10 @@ export class UserRepository {
         orderBy: {
           [orderBy]: ordering,
         },
+        include: {
+          student: true,
+          teacher: true,
+        },
       }),
     ]);
 
@@ -61,6 +68,10 @@ export class UserRepository {
       where: {
         id,
       },
+      include: {
+        student: true,
+        teacher: true,
+      },
     });
 
     return UserEntity.fromPrisma({ ...user, password: undefined });
@@ -70,7 +81,13 @@ export class UserRepository {
     where: Partial<User>,
     removePassword = true,
   ): Promise<UserEntity> {
-    const user = await this.prismaService.user.findUnique({ where });
+    const user = await this.prismaService.user.findUnique({
+      where,
+      include: {
+        student: true,
+        teacher: true,
+      },
+    });
 
     return UserEntity.fromPrisma({
       ...user,
@@ -84,6 +101,10 @@ export class UserRepository {
         id,
       },
       data: updateUserDto,
+      include: {
+        student: true,
+        teacher: true,
+      },
     });
 
     return UserEntity.fromPrisma({ ...user, password: undefined });
@@ -93,6 +114,10 @@ export class UserRepository {
     const user = await this.prismaService.user.delete({
       where: {
         id,
+      },
+      include: {
+        student: true,
+        teacher: true,
       },
     });
 
