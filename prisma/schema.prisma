@@ -28,6 +28,7 @@ model User {
   updatedAt DateTime?        @updatedAt @map("updated_at")
   deletedAt DateTime?        @map("deleted_at")
   teacher   Teacher?
+  student   Student?
 
   @@map("users")
 }
@@ -75,6 +76,19 @@ model Teacher {
   createdAt     DateTime            @default(now()) @map("created_at")
   updatedAt     DateTime?           @updatedAt @map("updated_at")
   deletedAt     DateTime?           @map("deleted_at")
+  students      Student[]           @relation("favorite_teachers")
 
   @@map("teachers")
+}
+
+model Student {
+  id               Int       @id @default(autoincrement())
+  userId           Int       @unique @map("user_id")
+  user             User      @relation(fields: [userId], references: [id])
+  favoriteTeachers Teacher[] @relation("favorite_teachers")
+  createdAt        DateTime  @default(now()) @map("created_at")
+  updatedAt        DateTime? @updatedAt @map("updated_at")
+  deletedAt        DateTime? @map("deleted_at")
+
+  @@map("students")
 }

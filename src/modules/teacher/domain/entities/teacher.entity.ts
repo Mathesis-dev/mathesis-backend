@@ -67,8 +67,8 @@ export default class TeacherEntity {
 
   static fromPrisma(
     teacher: Teacher,
-    user: User,
-    schedules: Array<TeachingSchedules>,
+    user?: User,
+    schedules?: Array<TeachingSchedules>,
   ): TeacherEntity {
     if (!teacher) return null;
 
