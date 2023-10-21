@@ -23,7 +23,6 @@ import { StudentService } from '../../services/student.service';
 import StudentEntity from '../../domain/entities/student.entity';
 
 import { StudentSeed } from 'prisma/seed/implementations/student';
-import { Public } from 'src/shared/decorators/public.decorator';
 
 @ApiBearerAuth()
 @ApiTags('Students')
@@ -70,6 +69,9 @@ export class StudentController {
   @ApiResponse({
     status: HttpStatus.OK,
     description: 'Estudante atualizado com sucesso',
+    schema: {
+      example: new StudentSeed().sampleGenerator(),
+    },
   })
   @Patch(':id')
   update(
@@ -86,6 +88,9 @@ export class StudentController {
   @ApiResponse({
     status: HttpStatus.OK,
     description: 'Estudante removido com sucesso',
+    schema: {
+      example: new StudentSeed().sampleGenerator(new Date()),
+    },
   })
   @Delete(':id')
   remove(@Param('id') id: number): Promise<StudentEntity> {
