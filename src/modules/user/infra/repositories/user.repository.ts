@@ -45,11 +45,7 @@ export class UserRepository {
       include: { student: true, teacher: true },
     });
 
-    return UserEntity.fromPrisma(
-      { ...user, password: undefined },
-      user?.teacher,
-      user?.student,
-    );
+    return UserEntity.fromPrisma({ ...user, password: undefined });
   }
 
   async findAll(
@@ -83,11 +79,7 @@ export class UserRepository {
     ]);
 
     const users = prismaUsers.map((user) =>
-      UserEntity.fromPrisma(
-        { ...user, password: undefined },
-        user?.teacher,
-        user?.student,
-      ),
+      UserEntity.fromPrisma({ ...user, password: undefined }),
     );
 
     return {
@@ -108,11 +100,7 @@ export class UserRepository {
       },
     });
 
-    return UserEntity.fromPrisma(
-      { ...user, password: undefined },
-      user?.teacher,
-      user?.student,
-    );
+    return UserEntity.fromPrisma({ ...user, password: undefined });
   }
 
   async findOneBy(
@@ -127,14 +115,10 @@ export class UserRepository {
       },
     });
 
-    return UserEntity.fromPrisma(
-      {
-        ...user,
-        password: removePassword ? undefined : user.password,
-      },
-      user?.teacher,
-      user?.student,
-    );
+    return UserEntity.fromPrisma({
+      ...user,
+      password: removePassword ? undefined : user.password,
+    });
   }
 
   async update(id: number, updateUserDto: UpdateUserDto): Promise<UserEntity> {
@@ -153,11 +137,7 @@ export class UserRepository {
       },
     });
 
-    return UserEntity.fromPrisma(
-      { ...user, password: undefined },
-      user?.teacher,
-      user?.student,
-    );
+    return UserEntity.fromPrisma({ ...user, password: undefined });
   }
 
   async remove(id: number): Promise<UserEntity> {
@@ -171,10 +151,6 @@ export class UserRepository {
       },
     });
 
-    return UserEntity.fromPrisma(
-      { ...user, password: undefined },
-      user?.teacher,
-      user?.student,
-    );
+    return UserEntity.fromPrisma({ ...user, password: undefined });
   }
 }

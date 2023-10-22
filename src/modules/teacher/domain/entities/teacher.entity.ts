@@ -1,14 +1,23 @@
-import { Teacher, TeachingSchedules, User } from '@prisma/client';
+import { Prisma, TeachingSchedules, User } from '@prisma/client';
 import UserEntity from 'src/modules/user/domain/entities/user.entity';
 import ScheduleEntity from '../../submodules/schedules/domain/entities/schedule.entity';
+
+const teacherWithRelations = Prisma.validator<Prisma.TeacherArgs>()({
+  include: { schedules: true, user: true },
+});
+
+type Teacher = Prisma.TeacherGetPayload<typeof teacherWithRelations> & {
+  schedules?: Array<TeachingSchedules>;
+  user?: User;
+};
 
 export default class TeacherEntity {
   readonly id: number;
   readonly phone: string;
   readonly biography: string;
-  readonly schedules: Array<ScheduleEntity>;
+  readonly schedules?: Array<ScheduleEntity>;
   readonly userId: number;
-  readonly user: UserEntity;
+  readonly user?: UserEntity;
   readonly city: string;
   readonly state: string;
   readonly badReviews: number;
@@ -50,21 +59,15 @@ export default class TeacherEntity {
     this.deletedAt = deletedAt;
   }
 
-  static fromPrisma(
-    teacher: Teacher,
-    user?: User,
-    schedules?: Array<TeachingSchedules>,
-  ): TeacherEntity {
+  static fromPrisma(teacher: Teacher): TeacherEntity {
     if (!teacher) return null;
 
     return new TeacherEntity({
       ...teacher,
-      schedules: schedules
-        ? schedules.map((schedule) =>
-            ScheduleEntity.fromPrisma(schedule, teacher),
-          )
+      schedules: teacher.schedules
+        ? teacher.schedules.map((schedule) => new ScheduleEntity(schedule))
         : [],
-      user: UserEntity.fromPrisma(user),
+      user: teacher.user ? new UserEntity(teacher.user) : undefined,
     });
   }
 }

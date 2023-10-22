@@ -1,9 +1,9 @@
-import { ApiProperty } from '@nestjs/swagger';
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import {
   ArrayNotEmpty,
   IsNotEmpty,
   IsNumber,
-  IsObject,
+  IsOptional,
   IsPhoneNumber,
   IsString,
   ValidateNested,
@@ -40,13 +40,13 @@ export class CreateTeacherDto {
   @ArrayNotEmpty({ message: 'Cronograma de aulas não pode ser vazio' })
   schedules: Array<CreateScheduleDto>;
 
-  @ApiProperty({
+  @ApiPropertyOptional({
     description: 'ID do usuário',
     example: 1,
   })
   @IsNumber({ allowNaN: false }, { message: 'ID do usuário inválido' })
-  @IsNotEmpty({ message: 'ID do usuário é obrigatório' })
-  userId: number;
+  @IsOptional()
+  userId?: number;
 
   @ApiProperty({
     description: 'Cidade do professor',

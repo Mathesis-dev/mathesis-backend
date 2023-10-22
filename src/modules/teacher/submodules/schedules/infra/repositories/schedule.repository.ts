@@ -16,13 +16,16 @@ export class ScheduleRepository {
 
   async create(createScheduleDto: CreateScheduleDto): Promise<ScheduleEntity> {
     const schedule = await this.prismaService.teachingSchedules.create({
-      data: createScheduleDto,
+      data: {
+        ...createScheduleDto,
+        teacherId: createScheduleDto.teacherId ?? undefined,
+      },
       include: {
         teacher: true,
       },
     });
 
-    return ScheduleEntity.fromPrisma(schedule, schedule?.teacher);
+    return ScheduleEntity.fromPrisma(schedule);
   }
 
   async findAllByTeacherId(
@@ -60,7 +63,7 @@ export class ScheduleRepository {
     ]);
 
     const schedules = prismaSchedules.map((schedule) =>
-      ScheduleEntity.fromPrisma(schedule, schedule?.teacher),
+      ScheduleEntity.fromPrisma(schedule),
     );
 
     return {
@@ -80,7 +83,7 @@ export class ScheduleRepository {
       },
     });
 
-    return ScheduleEntity.fromPrisma(schedule, schedule?.teacher);
+    return ScheduleEntity.fromPrisma(schedule);
   }
 
   async findOneBy(where: Partial<TeachingSchedules>): Promise<ScheduleEntity> {
@@ -89,7 +92,7 @@ export class ScheduleRepository {
       include: { teacher: true },
     });
 
-    return ScheduleEntity.fromPrisma(schedule, schedule?.teacher);
+    return ScheduleEntity.fromPrisma(schedule);
   }
 
   async update(
@@ -106,7 +109,7 @@ export class ScheduleRepository {
       },
     });
 
-    return ScheduleEntity.fromPrisma(schedule, schedule?.teacher);
+    return ScheduleEntity.fromPrisma(schedule);
   }
 
   async remove(id: number): Promise<ScheduleEntity> {
@@ -119,6 +122,6 @@ export class ScheduleRepository {
       },
     });
 
-    return ScheduleEntity.fromPrisma(schedule, schedule?.teacher);
+    return ScheduleEntity.fromPrisma(schedule);
   }
 }

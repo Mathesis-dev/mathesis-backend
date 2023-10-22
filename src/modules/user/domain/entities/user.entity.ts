@@ -1,6 +1,15 @@
-import { GenderEnum, Student, Teacher, User } from '@prisma/client';
+import { GenderEnum, Prisma, Student, Teacher } from '@prisma/client';
 import StudentEntity from 'src/modules/student/domain/entities/student.entity';
 import TeacherEntity from 'src/modules/teacher/domain/entities/teacher.entity';
+
+const userWithRelations = Prisma.validator<Prisma.UserArgs>()({
+  include: { student: true, teacher: true },
+});
+
+type User = Prisma.UserGetPayload<typeof userWithRelations> & {
+  student?: Student;
+  teacher?: Teacher;
+};
 
 export default class UserEntity {
   readonly id: number;
@@ -41,13 +50,13 @@ export default class UserEntity {
     this.deletedAt = deletedAt;
   }
 
-  static fromPrisma(user: User, teacher?: Teacher, student?: any): UserEntity {
+  static fromPrisma(user: User): UserEntity {
     if (!user) return null;
 
     return new UserEntity({
       ...user,
-      teacher: teacher ? TeacherEntity.fromPrisma(teacher) : undefined,
-      student: student ? StudentEntity.fromPrisma(student) : undefined,
+      teacher: user.teacher ? new TeacherEntity(user.teacher) : undefined,
+      student: user.student ? new StudentEntity(user.student) : undefined,
     });
   }
 }

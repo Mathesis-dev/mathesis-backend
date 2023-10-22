@@ -1,12 +1,22 @@
-import { SubjectEnum, Teacher, TeachingSchedules } from '@prisma/client';
+import { Prisma, SubjectEnum, Teacher } from '@prisma/client';
 import TeacherEntity from 'src/modules/teacher/domain/entities/teacher.entity';
+
+const scheduleWithRelations = Prisma.validator<Prisma.TeachingSchedulesArgs>()({
+  include: { teacher: true },
+});
+
+type TeachingSchedules = Prisma.TeachingSchedulesGetPayload<
+  typeof scheduleWithRelations
+> & {
+  teacher?: Teacher;
+};
 
 export default class ScheduleEntity {
   readonly id: number;
   readonly subject: SubjectEnum;
   readonly cost: number;
   readonly teacherId: number;
-  readonly teacher: TeacherEntity;
+  readonly teacher?: TeacherEntity;
   readonly onlineClass: boolean;
   readonly inPersonClass: boolean;
   readonly createdAt: Date;
@@ -37,15 +47,14 @@ export default class ScheduleEntity {
     this.deletedAt = deletedAt;
   }
 
-  static fromPrisma(
-    schedule: TeachingSchedules,
-    teacher: Teacher,
-  ): ScheduleEntity {
-    if (!schedule || !teacher) return null;
+  static fromPrisma(schedule: TeachingSchedules): ScheduleEntity {
+    if (!schedule) return null;
 
     return new ScheduleEntity({
       ...schedule,
-      teacher: TeacherEntity.fromPrisma(teacher, null, null),
+      teacher: schedule.teacher
+        ? new TeacherEntity(schedule.teacher)
+        : undefined,
     });
   }
 }
