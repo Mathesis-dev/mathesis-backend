@@ -1,13 +1,19 @@
-import { ApiProperty } from '@nestjs/swagger';
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import {
   IsEmail,
   IsEnum,
   IsNotEmpty,
+  IsObject,
+  IsOptional,
   IsString,
   IsStrongPassword,
+  ValidateNested,
 } from 'class-validator';
 import { UserCategoryEnum } from '../enums/user-category.enum';
 import { UserGenderEnum } from '../enums/user-gender.enum';
+import { CreateTeacherDto } from 'src/modules/teacher/domain/dtos/create-teacher.dto';
+import { CreateStudentDto } from 'src/modules/student/domain/dtos/create-student.dto';
+import { Type } from 'class-transformer';
 
 export class CreateUserDto {
   @ApiProperty({
@@ -59,4 +65,22 @@ export class CreateUserDto {
   @IsEnum(UserGenderEnum, { message: 'Gênero inválido' })
   @IsNotEmpty({ message: 'Gênero é obrigatório' })
   gender: UserGenderEnum;
+
+  @ApiPropertyOptional({
+    description: 'Dados do professor',
+    type: CreateTeacherDto,
+  })
+  @ValidateNested({ message: 'Dados do professor inválidos' })
+  @Type(() => CreateTeacherDto)
+  @IsObject({ message: 'Dados do professor inválidos' })
+  @IsOptional()
+  teacher?: CreateTeacherDto;
+
+  @ApiPropertyOptional({
+    description: 'Dados do estudante',
+    type: CreateStudentDto,
+  })
+  @IsObject({ message: 'Dados do estudante inválidos' })
+  @IsOptional()
+  student?: CreateStudentDto;
 }

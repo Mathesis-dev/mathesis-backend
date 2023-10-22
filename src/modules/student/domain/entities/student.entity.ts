@@ -40,10 +40,12 @@ export default class StudentEntity {
 
     return new StudentEntity({
       ...student,
-      user: UserEntity.fromPrisma(student.user),
-      favoriteTeachers: student.favoriteTeachers.map((teacher) =>
-        TeacherEntity.fromPrisma(teacher),
-      ),
+      user: UserEntity.fromPrisma(student?.user),
+      favoriteTeachers: student.favoriteTeachers
+        ? student.favoriteTeachers.map((teacher) =>
+            TeacherEntity.fromPrisma(teacher),
+          )
+        : [],
     });
   }
 }
