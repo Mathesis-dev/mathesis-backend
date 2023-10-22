@@ -1,6 +1,6 @@
 import { FavoriteTeachers, Prisma, User } from '@prisma/client';
 
-import FavoriteTeachersEntity from 'src/modules/favorite-teachers/domain/entities/favorite-teachers.entity';
+import FavoriteTeachersEntity from 'src/modules/student/submodules/favorite-teachers/domain/entities/favorite-teachers.entity';
 import UserEntity from 'src/modules/user/domain/entities/user.entity';
 
 const studentWithRelations = Prisma.validator<Prisma.StudentArgs>()({

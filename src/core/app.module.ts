@@ -8,7 +8,7 @@ import { ConfigModule } from './config/config.module';
 import { TeacherModule } from 'src/modules/teacher/teacher.module';
 import { SchedulesModule } from 'src/modules/teacher/submodules/schedules/schedules.module';
 import { StudentModule } from 'src/modules/student/student.module';
-import { FavoriteTeachersModule } from 'src/modules/favorite-teachers/favorite-teachers.module';
+import { FavoriteTeachersModule } from 'src/modules/student/submodules/favorite-teachers/favorite-teachers.module';
 
 @Module({
   imports: [
