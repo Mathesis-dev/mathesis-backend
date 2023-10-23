@@ -1,16 +1,25 @@
 import {
   Controller,
+  Get,
   HttpCode,
   HttpStatus,
   Post,
+  Req,
   Request,
   UseGuards,
 } from '@nestjs/common';
-import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import {
+  ApiBearerAuth,
+  ApiOperation,
+  ApiResponse,
+  ApiTags,
+} from '@nestjs/swagger';
 import { Public } from 'src/shared/decorators/public.decorator';
 import { LocalAuthGuard } from '../../domain/guards/local-auth.guard';
 import { AuthRequest } from '../../domain/interfaces/auth-request.interface';
 import { AuthService } from '../../services/auth.service';
+import UserEntity from 'src/modules/user/domain/entities/user.entity';
+import { UserSeed } from 'prisma/seed/implementations/user';
 
 @ApiTags('Auth')
 @Controller('auth')
@@ -52,5 +61,26 @@ export class AuthController {
   @Post('login')
   async login(@Request() req: AuthRequest) {
     return this.authService.login(req.user);
+  }
+
+  @ApiOperation({
+    summary: 'Validar se o usuário ainda está autenticado',
+    description: 'Valida se o usuário ainda está autenticado',
+  })
+  @ApiResponse({
+    status: HttpStatus.OK,
+    description: 'Usuário validado com sucesso',
+    schema: {
+      example: new UserSeed().sampleGenerator(),
+    },
+  })
+  @ApiBearerAuth()
+  @Get()
+  auth(@Req() request: Request): Promise<UserEntity> {
+    const { user } = request as unknown as {
+      user?: { id: number; email: string };
+    };
+
+    return this.authService.validateAuth(user);
   }
 }

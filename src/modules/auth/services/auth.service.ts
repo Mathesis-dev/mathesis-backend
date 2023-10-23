@@ -21,6 +21,7 @@ export class AuthService {
 
     return {
       access_token: this.jwtService.sign(payload),
+      user,
     };
   }
 
@@ -41,5 +42,14 @@ export class AuthService {
     throw new UnauthorizedException(
       'O Email e/ou senha estão incorretos ou são inválidos.',
     );
+  }
+
+  async validateAuth(requestUser?: {
+    id: number;
+    email: string;
+  }): Promise<UserEntity> {
+    if (!requestUser) throw new UnauthorizedException();
+
+    return await this.userService.findOne(requestUser.id);
   }
 }
