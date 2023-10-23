@@ -1,5 +1,6 @@
-import { Prisma, Teacher, User } from '@prisma/client';
-import TeacherEntity from 'src/modules/teacher/domain/entities/teacher.entity';
+import { FavoriteTeachers, Prisma, User } from '@prisma/client';
+
+import FavoriteTeachersEntity from 'src/modules/student/submodules/favorite-teachers/domain/entities/favorite-teachers.entity';
 import UserEntity from 'src/modules/user/domain/entities/user.entity';
 
 const studentWithRelations = Prisma.validator<Prisma.StudentArgs>()({
@@ -7,7 +8,7 @@ const studentWithRelations = Prisma.validator<Prisma.StudentArgs>()({
 });
 
 type Student = Prisma.StudentGetPayload<typeof studentWithRelations> & {
-  favoriteTeachers?: Array<Teacher>;
+  favoriteTeachers?: Array<FavoriteTeachers>;
   user?: User;
 };
 
@@ -15,7 +16,7 @@ export default class StudentEntity {
   readonly id: number;
   readonly userId: number;
   readonly user?: UserEntity;
-  readonly favoriteTeachers?: Array<TeacherEntity>;
+  readonly favoriteTeachers?: Array<FavoriteTeachersEntity>;
   readonly createdAt: Date;
   readonly updatedAt: Date;
   readonly deletedAt: Date | null;
@@ -46,7 +47,7 @@ export default class StudentEntity {
       user: student.user ? new UserEntity(student.user) : undefined,
       favoriteTeachers: student.favoriteTeachers
         ? student.favoriteTeachers.map((teacher) =>
-            teacher ? new TeacherEntity(teacher) : undefined,
+            teacher ? new FavoriteTeachersEntity(teacher) : undefined,
           )
         : [],
     });
