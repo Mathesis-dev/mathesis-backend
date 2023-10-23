@@ -20,8 +20,6 @@ import { FindAllResponseDto } from 'src/shared/dtos/find-all-response.dto';
 
 import { TeacherSeed } from 'prisma/seed/implementations/teacher';
 
-import { Public } from 'src/shared/decorators/public.decorator';
-
 import { CreateTeacherDto } from '../../domain/dtos/create-teacher.dto';
 import { ListTeacherParamsDto } from '../../domain/dtos/list-teacher-params.dto';
 import { UpdateTeacherDto } from '../../domain/dtos/update-teacher.dto';
@@ -44,7 +42,11 @@ export class TeacherController {
     status: HttpStatus.CREATED,
     description: 'O professor foi cadastrado com sucesso',
     schema: {
-      example: new TeacherSeed().sampleGenerator(),
+      example: {
+        data: [new TeacherSeed().sampleGenerator()],
+        total: 1,
+        pages: 0,
+      },
     },
   })
   @Post()
@@ -93,6 +95,9 @@ export class TeacherController {
   @ApiResponse({
     status: HttpStatus.OK,
     description: 'Professor atualizado com sucesso',
+    schema: {
+      example: new TeacherSeed().sampleGenerator(),
+    },
   })
   @Patch(':id')
   update(
@@ -109,6 +114,9 @@ export class TeacherController {
   @ApiResponse({
     status: HttpStatus.OK,
     description: 'Professor removido com sucesso',
+    schema: {
+      example: new TeacherSeed().sampleGenerator(new Date()),
+    },
   })
   @Delete(':id')
   remove(@Param('id') id: number): Promise<TeacherEntity> {

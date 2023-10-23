@@ -8,18 +8,33 @@ import { ListTeacherParamsDto } from '../domain/dtos/list-teacher-params.dto';
 import { UpdateTeacherDto } from '../domain/dtos/update-teacher.dto';
 import TeacherEntity from '../domain/entities/teacher.entity';
 import { TeacherRepository } from '../infra/repositories/teacher.repository';
+import { UserRepository } from 'src/modules/user/infra/repositories/user.repository';
+import { UserCategoryEnum } from 'src/modules/user/domain/enums/user-category.enum';
 
 @Injectable()
 export class TeacherService {
-  constructor(private readonly teacherRepository: TeacherRepository) {}
+  constructor(
+    private readonly teacherRepository: TeacherRepository,
+    private readonly userRepository: UserRepository,
+  ) {}
 
   async create(createTeacherDto: CreateTeacherDto): Promise<TeacherEntity> {
     const teacherExists = await this.teacherRepository.findOneBy({
       userId: createTeacherDto.userId,
+      deletedAt: null,
     });
 
     if (teacherExists?.id) {
       throw new BadRequestException('Professor já é cadastrado na plataforma');
+    }
+
+    const teacherUser = await this.userRepository.findOneBy({
+      id: createTeacherDto.userId,
+      deletedAt: null,
+    });
+
+    if (teacherUser.category !== UserCategoryEnum.Teacher) {
+      throw new BadRequestException('Esse usuário não é do tipo professor');
     }
 
     return await this.teacherRepository.create(createTeacherDto);
@@ -45,9 +60,10 @@ export class TeacherService {
   ): Promise<TeacherEntity> {
     const teacherExists = await this.teacherRepository.findOneBy({
       id,
+      deletedAt: null,
     });
 
-    if (!teacherExists) {
+    if (!teacherExists?.id) {
       throw new BadRequestException('Esse professor não existe');
     }
 
@@ -57,9 +73,10 @@ export class TeacherService {
   async remove(id: number): Promise<TeacherEntity> {
     const teacherExists = await this.teacherRepository.findOneBy({
       id,
+      deletedAt: null,
     });
 
-    if (!teacherExists) {
+    if (!teacherExists?.id) {
       throw new BadRequestException('Esse professor não existe');
     }
 

@@ -15,13 +15,13 @@ export class StudentSeed extends BaseSeed {
     super(STUDENTS, 'student');
   }
 
-  sampleGenerator = (): Student => {
+  sampleGenerator = (deletedAt?: Date): Student => {
     return {
       id: faker.number.int(),
       userId: faker.number.int(),
       createdAt: faker.date.past(),
       updatedAt: faker.date.past(),
-      deletedAt: null,
+      deletedAt: deletedAt ?? null,
     };
   };
 }

@@ -1,6 +1,5 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
-import { Type } from 'class-transformer';
-import { IsNotEmpty, IsNumber, ValidateNested } from 'class-validator';
+import { IsArray, IsNotEmpty, IsNumber } from 'class-validator';
 import TeacherEntity from 'src/modules/teacher/domain/entities/teacher.entity';
 
 export class CreateStudentDto {
@@ -15,13 +14,11 @@ export class CreateStudentDto {
   @IsNotEmpty({ message: 'ID do usuário é obrigatório' })
   userId: number;
 
-  // TODO - validar como funciona no DTO para o favoriteTeachers
   @ApiPropertyOptional({
     description: 'Professores favoritados pelo aluno',
     type: TeacherEntity,
     isArray: true,
   })
-  @ValidateNested({ each: true })
-  @Type(() => TeacherEntity)
+  @IsArray({ message: 'Professores favoritados precisa ser array' })
   favoriteTeachers?: Array<TeacherEntity>;
 }

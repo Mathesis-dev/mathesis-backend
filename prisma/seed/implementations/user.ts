@@ -26,17 +26,16 @@ export class UserSeed extends BaseSeed {
     super(USERS, 'user');
   }
 
-  sampleGenerator = (): User => {
+  sampleGenerator = (deletedAt?: Date): Omit<User, 'password'> => {
     return {
       id: faker.number.int(),
       name: faker.person.fullName(),
       email: faker.internet.email(),
-      password: faker.internet.password(),
       category: faker.helpers.enumValue(UserCategoryEnum),
       gender: faker.helpers.enumValue(UserGenderEnum),
       createdAt: faker.date.past(),
       updatedAt: faker.date.past(),
-      deletedAt: null,
+      deletedAt: deletedAt ?? null,
     };
   };
 }

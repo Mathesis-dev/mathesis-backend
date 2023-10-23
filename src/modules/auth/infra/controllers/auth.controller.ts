@@ -20,6 +20,20 @@ export class AuthController {
   @ApiOperation({
     summary: 'Loga o usuário na plataforma',
     description: 'Loga o usuário na plataforma',
+    requestBody: {
+      required: true,
+      content: {
+        'application/json': {
+          schema: {
+            type: 'object',
+            example: {
+              email: 'fulano@gmail.com',
+              password: 'Teste1@',
+            },
+          },
+        },
+      },
+    },
   })
   @ApiResponse({
     status: HttpStatus.OK,
@@ -29,22 +43,6 @@ export class AuthController {
       example: {
         access_token:
           'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c',
-        expires_in: '2h',
-        user: {
-          id: 1,
-          email: 'fulanodasilva@gmail.com',
-        },
-        properties: {
-          access_token: {
-            type: 'string',
-          },
-          expires_in: {
-            type: 'string',
-          },
-          user: {
-            type: 'object',
-          },
-        },
       },
     },
   })

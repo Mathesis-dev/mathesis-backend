@@ -8,13 +8,42 @@ import { FindAllResponseDto } from 'src/shared/dtos/find-all-response.dto';
 import { CreateUserDto } from '../../domain/dtos/create-user.dto';
 import { ListUserParamsDto } from '../../domain/dtos/list-user-params.dto';
 import { UpdateUserDto } from '../../domain/dtos/update-user.dto';
+import { UserCategoryEnum } from '../../domain/enums/user-category.enum';
 
 @Injectable()
 export class UserRepository {
   constructor(private readonly prismaService: PrismaService) {}
 
   async create(createUserDto: CreateUserDto): Promise<UserEntity> {
-    const user = await this.prismaService.user.create({ data: createUserDto });
+    const { teacher } = createUserDto;
+
+    const user = await this.prismaService.user.create({
+      data: {
+        ...createUserDto,
+        teacher: {
+          create:
+            createUserDto.category === UserCategoryEnum.Teacher
+              ? {
+                  ...teacher,
+                  schedules: {
+                    createMany: {
+                      data: teacher?.schedules ?? undefined,
+                    },
+                  },
+                }
+              : undefined,
+        },
+        student: {
+          create:
+            createUserDto.category === UserCategoryEnum.Student
+              ? {
+                  favoriteTeachers: undefined,
+                }
+              : undefined,
+        },
+      },
+      include: { student: true, teacher: true },
+    });
 
     return UserEntity.fromPrisma({ ...user, password: undefined });
   }
@@ -42,6 +71,10 @@ export class UserRepository {
         orderBy: {
           [orderBy]: ordering,
         },
+        include: {
+          student: true,
+          teacher: true,
+        },
       }),
     ]);
 
@@ -61,6 +94,10 @@ export class UserRepository {
       where: {
         id,
       },
+      include: {
+        student: true,
+        teacher: true,
+      },
     });
 
     return UserEntity.fromPrisma({ ...user, password: undefined });
@@ -70,7 +107,13 @@ export class UserRepository {
     where: Partial<User>,
     removePassword = true,
   ): Promise<UserEntity> {
-    const user = await this.prismaService.user.findUnique({ where });
+    const user = await this.prismaService.user.findUnique({
+      where,
+      include: {
+        student: true,
+        teacher: true,
+      },
+    });
 
     return UserEntity.fromPrisma({
       ...user,
@@ -83,7 +126,15 @@ export class UserRepository {
       where: {
         id,
       },
-      data: updateUserDto,
+      data: {
+        ...updateUserDto,
+        teacher: undefined,
+        student: undefined,
+      },
+      include: {
+        student: true,
+        teacher: true,
+      },
     });
 
     return UserEntity.fromPrisma({ ...user, password: undefined });
@@ -93,6 +144,10 @@ export class UserRepository {
     const user = await this.prismaService.user.delete({
       where: {
         id,
+      },
+      include: {
+        student: true,
+        teacher: true,
       },
     });
 

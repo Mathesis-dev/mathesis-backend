@@ -7,18 +7,33 @@ import { UpdateStudentDto } from '../domain/dtos/update-student.dto';
 
 import { Student } from '@prisma/client';
 import StudentEntity from '../domain/entities/student.entity';
+import { UserRepository } from 'src/modules/user/infra/repositories/user.repository';
+import { UserCategoryEnum } from 'src/modules/user/domain/enums/user-category.enum';
 
 @Injectable()
 export class StudentService {
-  constructor(private readonly studentRepository: StudentRepository) {}
+  constructor(
+    private readonly studentRepository: StudentRepository,
+    private readonly userRepository: UserRepository,
+  ) {}
 
   async create(createStudentDto: CreateStudentDto): Promise<StudentEntity> {
     const studentExists = await this.studentRepository.findOneBy({
       userId: createStudentDto.userId,
+      deletedAt: null,
     });
 
     if (studentExists?.id) {
       throw new BadRequestException('Estudante já cadastrado na plataforma');
+    }
+
+    const teacherUser = await this.userRepository.findOneBy({
+      id: createStudentDto.userId,
+      deletedAt: null,
+    });
+
+    if (teacherUser.category !== UserCategoryEnum.Student) {
+      throw new BadRequestException('Esse usuário não é do tipo estudante');
     }
 
     return await this.studentRepository.create(createStudentDto);
@@ -38,9 +53,10 @@ export class StudentService {
   ): Promise<StudentEntity> {
     const studentExists = await this.studentRepository.findOneBy({
       id,
+      deletedAt: null,
     });
 
-    if (!studentExists) {
+    if (!studentExists?.id) {
       throw new BadRequestException('Estudante não existe');
     }
 
@@ -50,9 +66,10 @@ export class StudentService {
   async remove(id: number): Promise<StudentEntity> {
     const studentExists = await this.studentRepository.findOneBy({
       id,
+      deletedAt: null,
     });
 
-    if (!studentExists) {
+    if (!studentExists?.id) {
       throw new BadRequestException('Estudante não existe');
     }
 

@@ -9,16 +9,16 @@ import {
 } from 'class-validator';
 
 export class CreateScheduleDto {
-  @ApiPropertyOptional({
-    description: 'ID da matéria',
-    example: 1,
-  })
-  @IsNumber(
-    { allowInfinity: false, allowNaN: false, maxDecimalPlaces: 0 },
-    { message: 'ID da matéria em formato inválido' },
-  )
-  @IsOptional({ message: 'ID da matéria é opcional' })
-  id?: number;
+  // @ApiPropertyOptional({
+  //   description: 'ID da matéria',
+  //   example: 1,
+  // })
+  // @IsNumber(
+  //   { allowInfinity: false, allowNaN: false, maxDecimalPlaces: 0 },
+  //   { message: 'ID da matéria em formato inválido' },
+  // )
+  // @IsOptional({ message: 'ID da matéria é opcional' })
+  // id?: number;
 
   @ApiProperty({
     description: 'Nome da matéria (em inglês)',
@@ -40,7 +40,7 @@ export class CreateScheduleDto {
   @IsNotEmpty({ message: 'Valor é obrigatório' })
   cost: number;
 
-  @ApiProperty({
+  @ApiPropertyOptional({
     description: 'ID do professor',
     example: 1,
   })
@@ -48,8 +48,8 @@ export class CreateScheduleDto {
     { allowNaN: false, allowInfinity: false, maxDecimalPlaces: 0 },
     { message: 'ID do professor em formato inválido' },
   )
-  @IsNotEmpty({ message: 'ID do professor é obrigatório' })
-  teacherId: number;
+  @IsOptional()
+  teacherId?: number;
 
   @ApiProperty({
     description: 'Define se a aula é online',

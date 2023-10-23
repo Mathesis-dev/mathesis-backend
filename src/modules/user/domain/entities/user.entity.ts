@@ -1,4 +1,15 @@
-import { GenderEnum, User } from '@prisma/client';
+import { GenderEnum, Prisma, Student, Teacher } from '@prisma/client';
+import StudentEntity from 'src/modules/student/domain/entities/student.entity';
+import TeacherEntity from 'src/modules/teacher/domain/entities/teacher.entity';
+
+const userWithRelations = Prisma.validator<Prisma.UserArgs>()({
+  include: { student: true, teacher: true },
+});
+
+type User = Prisma.UserGetPayload<typeof userWithRelations> & {
+  student?: Student;
+  teacher?: Teacher;
+};
 
 export default class UserEntity {
   readonly id: number;
@@ -7,6 +18,8 @@ export default class UserEntity {
   readonly password: string;
   readonly category: string;
   readonly gender: GenderEnum;
+  readonly teacher?: TeacherEntity;
+  readonly student?: StudentEntity;
   readonly createdAt: Date;
   readonly updatedAt: Date;
   readonly deletedAt: Date | null;
@@ -18,26 +31,20 @@ export default class UserEntity {
     password,
     category,
     gender,
+    teacher,
+    student,
     createdAt,
     updatedAt,
     deletedAt,
-  }: {
-    id: number;
-    name: string;
-    email: string;
-    password: string;
-    category: string;
-    gender: GenderEnum;
-    createdAt: Date;
-    updatedAt: Date;
-    deletedAt: Date | null;
-  }) {
+  }: UserEntity) {
     this.id = id;
     this.name = name;
     this.email = email;
     this.password = password;
     this.category = category;
     this.gender = gender;
+    this.teacher = teacher;
+    this.student = student;
     this.createdAt = createdAt;
     this.updatedAt = updatedAt;
     this.deletedAt = deletedAt;
@@ -47,15 +54,9 @@ export default class UserEntity {
     if (!user) return null;
 
     return new UserEntity({
-      id: user.id,
-      name: user.name,
-      email: user.email,
-      password: user.password,
-      category: user.category,
-      gender: user.gender,
-      createdAt: user.createdAt,
-      updatedAt: user.updatedAt,
-      deletedAt: user.deletedAt,
+      ...user,
+      teacher: user.teacher ? new TeacherEntity(user.teacher) : undefined,
+      student: user.student ? new StudentEntity(user.student) : undefined,
     });
   }
 }

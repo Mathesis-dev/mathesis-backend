@@ -11,6 +11,7 @@ import { User } from '@prisma/client';
 import UserEntity from '../domain/entities/user.entity';
 
 import * as bcrypt from 'bcrypt';
+import { UserCategoryEnum } from '../domain/enums/user-category.enum';
 
 @Injectable()
 export class UserService {
@@ -19,10 +20,20 @@ export class UserService {
   async create(createUserDto: CreateUserDto): Promise<UserEntity> {
     const userExists = await this.userRepository.findOneBy({
       email: createUserDto.email,
+      deletedAt: null,
     });
 
     if (userExists?.id) {
       throw new BadRequestException('Usuário já existe');
+    }
+
+    if (
+      createUserDto.category === UserCategoryEnum.Teacher &&
+      !createUserDto.teacher
+    ) {
+      throw new BadRequestException(
+        'Você precisa enviar os dados do professor',
+      );
     }
 
     return await this.userRepository.create({
@@ -51,10 +62,17 @@ export class UserService {
   async update(id: number, updateUserDto: UpdateUserDto): Promise<UserEntity> {
     const userExists = await this.userRepository.findOneBy({
       id,
+      deletedAt: null,
     });
 
-    if (!userExists) {
+    if (!userExists?.id) {
       throw new BadRequestException('Usuário não existe');
+    }
+
+    if (updateUserDto.category !== userExists.category) {
+      throw new BadRequestException(
+        'Você não pode alterar o tipo da sua conta',
+      );
     }
 
     return await this.userRepository.update(id, updateUserDto);
@@ -63,9 +81,10 @@ export class UserService {
   async remove(id: number): Promise<UserEntity> {
     const userExists = await this.userRepository.findOneBy({
       id,
+      deletedAt: null,
     });
 
-    if (!userExists) {
+    if (!userExists?.id) {
       throw new BadRequestException('Usuário não existe');
     }
 

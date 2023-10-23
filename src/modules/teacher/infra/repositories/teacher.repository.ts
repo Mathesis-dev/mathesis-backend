@@ -23,6 +23,7 @@ export class TeacherRepository {
     const teacher = await this.prismaService.teacher.create({
       data: {
         ...createTeacherDto,
+        userId: createTeacherDto.userId ?? undefined,
         schedules: {
           createMany: {
             data: schedules,
@@ -35,7 +36,7 @@ export class TeacherRepository {
       },
     });
 
-    return TeacherEntity.fromPrisma(teacher, teacher?.user, teacher?.schedules);
+    return TeacherEntity.fromPrisma(teacher);
   }
 
   async findAll(
@@ -89,7 +90,7 @@ export class TeacherRepository {
     ]);
 
     const teachers = prismaTeachers.map((teacher) =>
-      TeacherEntity.fromPrisma(teacher, teacher?.user, teacher?.schedules),
+      TeacherEntity.fromPrisma(teacher),
     );
 
     return {
@@ -110,7 +111,7 @@ export class TeacherRepository {
       },
     });
 
-    return TeacherEntity.fromPrisma(teacher, teacher?.user, teacher?.schedules);
+    return TeacherEntity.fromPrisma(teacher);
   }
 
   async findOneBy(where: Partial<Teacher>): Promise<TeacherEntity> {
@@ -119,7 +120,7 @@ export class TeacherRepository {
       include: { user: true, schedules: true },
     });
 
-    return TeacherEntity.fromPrisma(teacher, teacher?.user, teacher?.schedules);
+    return TeacherEntity.fromPrisma(teacher);
   }
 
   async update(
@@ -152,7 +153,7 @@ export class TeacherRepository {
       },
     });
 
-    return TeacherEntity.fromPrisma(teacher, teacher?.user, teacher?.schedules);
+    return TeacherEntity.fromPrisma(teacher);
   }
 
   async remove(id: number): Promise<TeacherEntity> {
@@ -166,6 +167,6 @@ export class TeacherRepository {
       },
     });
 
-    return TeacherEntity.fromPrisma(teacher, teacher?.user, teacher?.schedules);
+    return TeacherEntity.fromPrisma(teacher);
   }
 }

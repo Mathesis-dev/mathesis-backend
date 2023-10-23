@@ -1,12 +1,22 @@
-import { SubjectEnum, Teacher, TeachingSchedules } from '@prisma/client';
+import { Prisma, SubjectEnum, Teacher } from '@prisma/client';
 import TeacherEntity from 'src/modules/teacher/domain/entities/teacher.entity';
+
+const scheduleWithRelations = Prisma.validator<Prisma.TeachingSchedulesArgs>()({
+  include: { teacher: true },
+});
+
+type TeachingSchedules = Prisma.TeachingSchedulesGetPayload<
+  typeof scheduleWithRelations
+> & {
+  teacher?: Teacher;
+};
 
 export default class ScheduleEntity {
   readonly id: number;
   readonly subject: SubjectEnum;
   readonly cost: number;
   readonly teacherId: number;
-  readonly teacher: TeacherEntity;
+  readonly teacher?: TeacherEntity;
   readonly onlineClass: boolean;
   readonly inPersonClass: boolean;
   readonly createdAt: Date;
@@ -24,18 +34,7 @@ export default class ScheduleEntity {
     createdAt,
     updatedAt,
     deletedAt,
-  }: {
-    id: number;
-    subject: SubjectEnum;
-    cost: number;
-    teacherId: number;
-    teacher: TeacherEntity;
-    onlineClass: boolean;
-    inPersonClass: boolean;
-    createdAt: Date;
-    updatedAt: Date;
-    deletedAt: Date | null;
-  }) {
+  }: ScheduleEntity) {
     this.id = id;
     this.subject = subject;
     this.cost = cost;
@@ -48,23 +47,14 @@ export default class ScheduleEntity {
     this.deletedAt = deletedAt;
   }
 
-  static fromPrisma(
-    schedule: TeachingSchedules,
-    teacher: Teacher,
-  ): ScheduleEntity {
-    if (!schedule || !teacher) return null;
+  static fromPrisma(schedule: TeachingSchedules): ScheduleEntity {
+    if (!schedule) return null;
 
     return new ScheduleEntity({
-      id: schedule.id,
-      subject: schedule.subject,
-      cost: schedule.cost,
-      teacherId: schedule.teacherId,
-      teacher: TeacherEntity.fromPrisma(teacher, null, null),
-      onlineClass: schedule.onlineClass,
-      inPersonClass: schedule.inPersonClass,
-      createdAt: schedule.createdAt,
-      updatedAt: schedule.updatedAt,
-      deletedAt: schedule.deletedAt,
+      ...schedule,
+      teacher: schedule.teacher
+        ? new TeacherEntity(schedule.teacher)
+        : undefined,
     });
   }
 }
