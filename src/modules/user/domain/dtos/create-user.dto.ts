@@ -27,14 +27,14 @@ export class CreateUserDto {
   @IsNotEmpty({ message: 'Email é obrigatório' })
   email: string;
 
-  @ApiProperty({ description: 'Senha do usuário', example: 'Teste1@' })
+  @ApiProperty({ description: 'Senha do usuário', example: 'Teste123@' })
   @IsString({ message: 'Senha inválida' })
   @IsNotEmpty({ message: 'Senha é obrigatório' })
   @IsStrongPassword(
     {
-      minLength: 6,
+      minLength: 8,
       minLowercase: 1,
-      minNumbers: 1,
+      minNumbers: 2,
       minSymbols: 1,
       minUppercase: 1,
     },
