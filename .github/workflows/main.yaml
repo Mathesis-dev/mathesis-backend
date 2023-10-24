@@ -21,3 +21,17 @@ jobs:
         run: npm install
       - name: Run Build
         run: npm run build
+      - name: SSH Remote Commands
+        # You may pin to the exact commit or the version.
+        # uses: appleboy/ssh-action@55dabf81b49d4120609345970c91507e2d734799
+        uses: appleboy/ssh-action@v1.0.0
+        with:
+          key: ${{secrets.GOOGLE_CLOUD_VM_SSH}}
+          host: ${{secrets.GOOGLE_CLOUD_VM_IP}}
+          username: ${{secrets.GOOGLE_CLOUD_VM_USERNAME}}
+          script: |
+            pm2 delete all
+            cd /var/app/mathesis
+            git pull
+            npm install
+            pm2 start nmp-- start
