@@ -11,7 +11,7 @@ async function bootstrap() {
   app.enableCors({
     credentials: true,
     optionsSuccessStatus: HttpStatus.OK,
-    origin: '*',
+    origin: true,
   });
 
   app.useGlobalPipes(
