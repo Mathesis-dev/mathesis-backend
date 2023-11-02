@@ -89,8 +89,11 @@ export class FavoriteTeachersController {
     status: HttpStatus.OK,
     description: 'Professor desfavoritado com sucesso',
   })
-  @Delete(':id')
-  remove(@Param('id') id: number): Promise<FavoriteTeachersEntity> {
-    return this.favoriteTeachersService.remove(id);
+  @Delete()
+  remove(
+    @Query('studentId') studentId: number,
+    @Query('teacherId') teacherId: number,
+  ): Promise<FavoriteTeachersEntity> {
+    return this.favoriteTeachersService.remove(studentId, teacherId);
   }
 }

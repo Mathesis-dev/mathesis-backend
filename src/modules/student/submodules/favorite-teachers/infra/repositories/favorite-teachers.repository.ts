@@ -7,6 +7,7 @@ import FavoriteTeachersEntity from '../../domain/entities/favorite-teachers.enti
 import { FindAllResponseDto } from 'src/shared/dtos/find-all-response.dto';
 import { FavoriteTeacherDto } from '../../domain/dtos/favorite-teacher.dto';
 import { ListFavoriteTeachersParamsDto } from '../../domain/dtos/list-favorite-teachers-params.dto';
+import { FavoriteTeachers } from '@prisma/client';
 
 @Injectable()
 export class FavoriteTeachersRepository {
@@ -97,7 +98,27 @@ export class FavoriteTeachersRepository {
     return FavoriteTeachersEntity.fromPrisma(favoriteTeacher);
   }
 
-  async remove(id: number): Promise<FavoriteTeachersEntity> {
+  async findOneBy(
+    where: Partial<FavoriteTeachers>,
+  ): Promise<FavoriteTeachersEntity> {
+    const favoriteTeacher =
+      await this.prismaService.favoriteTeachers.findUnique({
+        where,
+        include: {
+          student: true,
+          teacher: true,
+        },
+      });
+
+    return FavoriteTeachersEntity.fromPrisma(favoriteTeacher);
+  }
+
+  async remove(
+    studentId: number,
+    teacherId: number,
+  ): Promise<FavoriteTeachersEntity> {
+    const { id } = await this.findOneBy({ studentId, teacherId });
+
     const favoriteTeacher = await this.prismaService.favoriteTeachers.delete({
       where: {
         id,
