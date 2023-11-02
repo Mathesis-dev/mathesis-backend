@@ -20,6 +20,13 @@ export class FavoriteTeachersService {
     return await this.favoriteTeachersRepository.findAll(params);
   }
 
+  async isFavorite(studentId: number, teacherId: number): Promise<boolean> {
+    return await this.favoriteTeachersRepository.isFavorite(
+      studentId,
+      teacherId,
+    );
+  }
+
   async create(
     favoriteTeacherDto: FavoriteTeacherDto,
   ): Promise<FavoriteTeachersEntity> {

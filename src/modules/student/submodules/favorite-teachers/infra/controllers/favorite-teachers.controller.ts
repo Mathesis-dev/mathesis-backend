@@ -47,6 +47,26 @@ export class FavoriteTeachersController {
   }
 
   @ApiOperation({
+    summary: 'Verificar se um professor é favorito',
+    description:
+      'Verifica um professor e estudante pelos seus IDs e retorna um booleano identificando se o professor é favorito ou não',
+  })
+  @ApiResponse({
+    status: HttpStatus.OK,
+    description: 'Professor é favorito',
+    schema: {
+      example: true,
+    },
+  })
+  @Get('is-favorite')
+  findOne(
+    @Query('studentId') studentId: number,
+    @Query('teacherId') teacherId: number,
+  ): Promise<boolean> {
+    return this.favoriteTeachersService.isFavorite(studentId, teacherId);
+  }
+
+  @ApiOperation({
     summary: 'Favoritar um professor',
     description: 'Favorita um professor',
   })
