@@ -33,7 +33,10 @@ export class FavoriteTeachersService {
     return await this.favoriteTeachersRepository.create(favoriteTeacherDto);
   }
 
-  async remove(id: number): Promise<FavoriteTeachersEntity> {
-    return await this.favoriteTeachersRepository.remove(id);
+  async remove(
+    studentId: number,
+    teacherId: number,
+  ): Promise<FavoriteTeachersEntity> {
+    return await this.favoriteTeachersRepository.remove(studentId, teacherId);
   }
 }
