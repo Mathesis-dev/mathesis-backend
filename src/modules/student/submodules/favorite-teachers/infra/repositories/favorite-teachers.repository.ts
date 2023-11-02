@@ -52,7 +52,12 @@ export class FavoriteTeachersRepository {
           },
           include: {
             student: true,
-            teacher: true,
+            teacher: {
+              include: {
+                schedules: true,
+                user: true,
+              },
+            },
           },
           orderBy: {
             [orderBy]: ordering,
