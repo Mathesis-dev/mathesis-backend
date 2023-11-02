@@ -70,6 +70,19 @@ export class FavoriteTeachersRepository {
     };
   }
 
+  async isFavorite(studentId: number, teacherId: number): Promise<boolean> {
+    const favoriteTeacher = await this.prismaService.favoriteTeachers.findFirst(
+      {
+        where: {
+          studentId,
+          teacherId,
+        },
+      },
+    );
+
+    return !!favoriteTeacher;
+  }
+
   async create(
     favoriteTeacherDto: FavoriteTeacherDto,
   ): Promise<FavoriteTeachersEntity> {
