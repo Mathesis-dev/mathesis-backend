@@ -9,6 +9,7 @@ import { TeacherModule } from 'src/modules/teacher/teacher.module';
 import { SchedulesModule } from 'src/modules/teacher/submodules/schedules/schedules.module';
 import { StudentModule } from 'src/modules/student/student.module';
 import { FavoriteTeachersModule } from 'src/modules/student/submodules/favorite-teachers/favorite-teachers.module';
+import { ChatModule } from 'src/modules/chat/chat.module';
 
 @Module({
   imports: [
@@ -20,6 +21,7 @@ import { FavoriteTeachersModule } from 'src/modules/student/submodules/favorite-
     SchedulesModule,
     StudentModule,
     FavoriteTeachersModule,
+    ChatModule,
   ],
   controllers: [],
   providers: [
